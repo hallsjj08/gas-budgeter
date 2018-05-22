@@ -18,14 +18,6 @@ public class Car {
 
     }
 
-    public double costOfGas(double priceOfGas, int totalDistance_miles){
-        return priceOfGas/(mpg/totalDistance_miles);
-    }
-
-    public int distanceTraveledOnFullTank(){
-        return mpg * tankCapacity_gallons;
-    }
-
     public String getMake() {
         return make;
     }
