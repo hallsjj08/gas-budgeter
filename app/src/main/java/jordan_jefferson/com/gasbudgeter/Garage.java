@@ -21,13 +21,13 @@ public class Garage {
         return sGarage;
     }
 
-    public double costOfGas(double priceOfGas, int totalDistance_miles, int position){
-        return priceOfGas/(cars.get(position).getMpg()/totalDistance_miles);
-    }
+//    public double costOfGas(double priceOfGas, int totalDistance_miles, int position){
+//        return priceOfGas/(cars.get(position).getMpg()/totalDistance_miles);
+//    }
 
-    public int distanceTraveledOnFullTank(int position){
-        return cars.get(position).getMpg() * cars.get(position).getTankCapacity_gallons();
-    }
+//    public int distanceTraveledOnFullTank(int position){
+//        return cars.get(position).getMpg() * cars.get(position).getTankCapacity_gallons();
+//    }
 
     public Car getCar(int position){
         return cars.get(position);
