@@ -3,6 +3,7 @@ package jordan_jefferson.com.gasbudgeter.data;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import java.util.List;
@@ -20,8 +21,14 @@ public interface CarDao {
     @Query("SELECT * FROM cars")
     List<Car> getCars();
 
-    @Insert
-    void insertAll(Car... cars);
+    @Query("SELECT * FROM cars WHERE carId = :carId")
+    Car getCar(int carId);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insertCar(Car car);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insertAll(Car... cars);
 
     @Delete
     void delete(Car car);
