@@ -1,12 +1,13 @@
-package jordan_jefferson.com.gasbudgeter;
+package jordan_jefferson.com.gasbudgeter.data;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import java.util.List;
+
+import jordan_jefferson.com.gasbudgeter.data.Car;
 
 /*
 A public interface to define needed queries for database operations.

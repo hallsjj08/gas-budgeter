@@ -1,4 +1,4 @@
-package jordan_jefferson.com.gasbudgeter;
+package jordan_jefferson.com.gasbudgeter.util;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

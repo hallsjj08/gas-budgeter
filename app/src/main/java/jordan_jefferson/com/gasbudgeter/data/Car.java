@@ -1,4 +1,4 @@
-package jordan_jefferson.com.gasbudgeter;
+package jordan_jefferson.com.gasbudgeter.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

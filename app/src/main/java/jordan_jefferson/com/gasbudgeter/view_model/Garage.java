@@ -1,8 +1,10 @@
-package jordan_jefferson.com.gasbudgeter;
+package jordan_jefferson.com.gasbudgeter.view_model;
 
 import android.content.Context;
 
 import java.util.ArrayList;
+
+import jordan_jefferson.com.gasbudgeter.data.Car;
 
 public class Garage {
 
