@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import jordan_jefferson.com.gasbudgeter.data.Car;
 
@@ -19,7 +19,7 @@ See https://developer.android.com/training/data-storage/room/accessing-data for 
 public interface CarDao {
 
     @Query("SELECT * FROM cars")
-    List<Car> getCars();
+    ArrayList<Car> getCars();
 
     @Query("SELECT * FROM cars WHERE carId = :carId")
     Car getCar(int carId);
