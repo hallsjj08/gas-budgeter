@@ -5,11 +5,12 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GarageRepository {
 
     private CarDao mCarDao;
-    private LiveData<ArrayList<Car>> mAllCars;
+    private LiveData<List<Car>> mAllCars;
 
     public GarageRepository(Application application){
         CarDatabase db = CarDatabase.getDatabase(application);
@@ -17,7 +18,7 @@ public class GarageRepository {
         mAllCars = mCarDao.getCars();
     }
 
-    public LiveData<ArrayList<Car>> getAllCars() {return mAllCars;}
+    public LiveData<List<Car>> getAllCars() {return mAllCars;}
 
     public void insert(Car car) {new insertAsyncTask(mCarDao).execute(car);}
 

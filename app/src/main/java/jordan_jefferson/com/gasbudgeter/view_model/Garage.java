@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.data.Car;
 import jordan_jefferson.com.gasbudgeter.data.GarageRepository;
@@ -13,7 +14,7 @@ import jordan_jefferson.com.gasbudgeter.data.GarageRepository;
 public class Garage extends AndroidViewModel{
 
     private GarageRepository mGarageRepository;
-    private LiveData<ArrayList<Car>> cars;
+    private LiveData<List<Car>> cars;
 
     public Garage(@NonNull Application application){
         super(application);
@@ -22,7 +23,7 @@ public class Garage extends AndroidViewModel{
         cars = mGarageRepository.getAllCars();
     }
 
-    LiveData<ArrayList<Car>> getCars(){
+    LiveData<List<Car>> getCars(){
         return cars;
     }
 

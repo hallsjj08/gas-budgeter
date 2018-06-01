@@ -8,6 +8,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 A public interface to define needed queries for database operations.
@@ -18,7 +19,7 @@ See https://developer.android.com/training/data-storage/room/accessing-data for 
 public interface CarDao {
 
     @Query("SELECT * FROM cars ORDER BY make ASC")
-    LiveData<ArrayList<Car>> getCars();
+    LiveData<List<Car>> getCars();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertCar(Car car);
