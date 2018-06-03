@@ -41,4 +41,6 @@ dependencies {
     // Lifecycle components
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 }
