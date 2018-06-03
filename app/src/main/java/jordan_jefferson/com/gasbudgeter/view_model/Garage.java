@@ -23,7 +23,7 @@ public class Garage extends AndroidViewModel{
         cars = mGarageRepository.getAllCars();
     }
 
-    LiveData<List<Car>> getCars(){
+    public LiveData<List<Car>> getCars(){
         return cars;
     }
 

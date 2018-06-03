@@ -4,7 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GarageRepository {
