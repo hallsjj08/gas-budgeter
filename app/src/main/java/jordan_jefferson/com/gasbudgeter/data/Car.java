@@ -4,6 +4,11 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
+import java.io.Serializable;
+
 /*
 This class uses the Room Persistance Library.
 Entity sets the contract for the table in the SQLite db.
@@ -14,43 +19,67 @@ Parameter carId will be assigned from the fueleconomy.gov API.
  */
 
 @Entity(tableName = "cars")
-public class Car {
+@Root(name = "vehicle", strict = false)
+public class Car implements Serializable {
 
     @PrimaryKey
+    @Element(name = "id")
     private int carId;
 
     @ColumnInfo(name = "make")
+    @Element(name = "make")
     private String make;
 
     @ColumnInfo(name = "model")
+    @Element(name = "model")
     private String model;
 
     @ColumnInfo(name = "year")
+    @Element(name = "year")
     private int year;
 
-    @ColumnInfo(name = "mpg")
-    private int mpg;
+    @ColumnInfo(name = "fuel_type")
+    @Element(name = "fuelType1")
+    private String fuelType;
 
-    @ColumnInfo(name = "tank_capacity_gallons")
-    private int tankCapacity_gallons;
+    @ColumnInfo(name = "city_mpg")
+    @Element(name = "city08")
+    private int city_mpg;
 
-    public Car(int carId, String make, String model, int year, int mpg, int tankCapacity_gallons){
+    @ColumnInfo(name = "hwy_mpg")
+    @Element(name = "highway08")
+    private int hwy_mpg;
+
+//    @ColumnInfo(name = "tank_capacity_gallons")
+//    private int tankCapacity_gallons;
+
+    private Car(){}
+
+    public Car(int carId,
+               String make,
+               String model,
+               int year,
+               String fuelType,
+               int city_mpg,
+               int hwy_mpg){
 
         this.carId = carId;
         this.make = make;
         this.model = model;
         this.year = year;
-        this.mpg = mpg;
-        this.tankCapacity_gallons = tankCapacity_gallons;
+        this.fuelType = fuelType;
+        this.city_mpg = city_mpg;
+        this.hwy_mpg = hwy_mpg;
+//        this.tankCapacity_gallons = tankCapacity_gallons;
 
     }
 
-    public int distanceTraveledOnFullTank(){
-        return mpg * tankCapacity_gallons;
-    }
+//    public int distanceTraveledOnFullTank(){
+//        return hwy_mpg * tankCapacity_gallons;
+//    }
 
     public double costOfGas(double priceOfGas, int totalDistance_miles){
-        return priceOfGas/(mpg/totalDistance_miles);
+        return priceOfGas/(hwy_mpg/totalDistance_miles);
     }
 
     public int getCarId() {
@@ -85,20 +114,36 @@ public class Car {
         this.year = year;
     }
 
-    public int getMpg() {
-        return mpg;
+    public String getFuelType() {
+        return fuelType;
     }
 
-    public void setMpg(int mpg) {
-        this.mpg = mpg;
+    public void setFuelType(String fuelType) {
+        this.fuelType = fuelType;
     }
 
-    public int getTankCapacity_gallons() {
-        return tankCapacity_gallons;
+    public int getCity_mpg() {
+        return city_mpg;
     }
 
-    public void setTankCapacity_gallons(int tankCapacity_gallons) {
-        this.tankCapacity_gallons = tankCapacity_gallons;
+    public void setCity_mpg(int city_mpg) {
+        this.city_mpg = city_mpg;
     }
+
+    public int getHwy_mpg() {
+        return hwy_mpg;
+    }
+
+    public void setHwy_mpg(int hwy_mpg) {
+        this.hwy_mpg = hwy_mpg;
+    }
+
+    //    public int getTankCapacity_gallons() {
+//        return tankCapacity_gallons;
+//    }
+
+//    public void setTankCapacity_gallons(int tankCapacity_gallons) {
+//        this.tankCapacity_gallons = tankCapacity_gallons;
+//    }
 
 }
