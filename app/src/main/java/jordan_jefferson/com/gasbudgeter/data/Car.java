@@ -53,6 +53,7 @@ public class Car implements Serializable {
 //    @ColumnInfo(name = "tank_capacity_gallons")
 //    private int tankCapacity_gallons;
 
+    //Retrofit needs an empty default constructor to build the object from xml data.
     private Car(){}
 
     public Car(int carId,
