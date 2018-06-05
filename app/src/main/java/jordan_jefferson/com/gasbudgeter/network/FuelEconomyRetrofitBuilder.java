@@ -2,6 +2,7 @@ package jordan_jefferson.com.gasbudgeter.network;
 
 import java.util.List;
 
+import jordan_jefferson.com.gasbudgeter.data.Car;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -13,6 +14,7 @@ public class FuelEconomyRetrofitBuilder {
     private String year;
     private String make;
     private String model;
+    private Car myCar;
     private Call<ClientListItems> data;
     private FuelEconomyClient fuelEconomyClient;
     private List<ClientItem> clientItems;
@@ -63,11 +65,26 @@ public class FuelEconomyRetrofitBuilder {
             }
         });
 
-        if(dataType == 4 && clientItems != null){
-            return clientItems;
-        }else{
-            return null;
-        }
+        return clientItems;
+    }
+
+    private Car newCar(String id){
+        Call<Car> car = fuelEconomyClient.getClientVehicleData(id);
+
+        car.enqueue(new Callback<Car>() {
+            @Override
+            public void onResponse(Call<Car> call, Response<Car> response) {
+                myCar = response.body();
+
+            }
+
+            @Override
+            public void onFailure(Call<Car> call, Throwable t) {
+
+            }
+        });
+
+        return myCar;
     }
 
     public void previousDataType(){

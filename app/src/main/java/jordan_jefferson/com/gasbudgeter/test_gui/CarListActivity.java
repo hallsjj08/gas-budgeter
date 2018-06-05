@@ -17,15 +17,7 @@ import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
-import jordan_jefferson.com.gasbudgeter.network.ClientItem;
-import jordan_jefferson.com.gasbudgeter.network.ClientListItems;
-import jordan_jefferson.com.gasbudgeter.network.FuelEconomyClient;
 import jordan_jefferson.com.gasbudgeter.view_model.Garage;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class CarListActivity extends AppCompatActivity {
 
