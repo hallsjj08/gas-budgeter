@@ -54,8 +54,6 @@ public class CarListActivity extends AppCompatActivity {
             }
         });
 
-        fetchItems();
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,33 +77,4 @@ public class CarListActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }
     }
-
-    public void fetchItems(){
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.fueleconomy.gov/ws/rest/")
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
-
-        FuelEconomyClient fuelEconomyClient = retrofit.create(FuelEconomyClient.class);
-
-        Call<ClientListItems> years = fuelEconomyClient.getClientVehicleTypeId("2012", "Honda", "Civic");
-
-        years.enqueue(new Callback<ClientListItems>() {
-            @Override
-            public void onResponse(Call<ClientListItems> call, Response<ClientListItems> response) {
-                System.out.println("Success");
-                List<ClientItem> myItems = response.body().clientItemList;
-
-                for(int i = 0; i < myItems.size(); i++){
-                    System.out.println(myItems.get(i).getText());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ClientListItems> call, Throwable t) {
-                System.out.println("Failed");
-            }
-        });
-    }
-
 }
