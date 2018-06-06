@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Gas Budgeter</string>
     <string name="title_activity_car_list">CarListActivity</string>
+    <string name="title_activity_test_maps">Map</string>
 </resources>
