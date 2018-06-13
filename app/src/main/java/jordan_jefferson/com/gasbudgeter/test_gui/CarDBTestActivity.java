@@ -1,19 +1,14 @@
 package jordan_jefferson.com.gasbudgeter.test_gui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.List;
-
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
-import jordan_jefferson.com.gasbudgeter.network.ClientItem;
-import jordan_jefferson.com.gasbudgeter.network.ClientListItems;
 import jordan_jefferson.com.gasbudgeter.network.FuelEconomyClient;
 import retrofit2.Call;
 import retrofit2.Callback;
