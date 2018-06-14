@@ -11,6 +11,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class FuelEconomyRetrofitBuilder {
 
+    private static final String FUEL_ECONOMY_BASE_URL = "https://www.fueleconomy.gov/ws/rest/";
     private String year;
     private String make;
     private String model;
@@ -23,7 +24,8 @@ public class FuelEconomyRetrofitBuilder {
     public FuelEconomyRetrofitBuilder(){
         dataType = 0;
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.fueleconomy.gov/ws/rest/")
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(FUEL_ECONOMY_BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 

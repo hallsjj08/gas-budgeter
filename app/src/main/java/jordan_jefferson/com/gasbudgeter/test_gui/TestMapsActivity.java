@@ -37,6 +37,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import jordan_jefferson.com.gasbudgeter.R;
+import jordan_jefferson.com.gasbudgeter.directions_model.DirectionResults;
+import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsClient;
+import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsRetrofitBuilder;
 
 public class TestMapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
@@ -49,6 +52,7 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
     private Marker currentLocationMarker;
     private LocationCallback locationCallback;
 
+    private String url = "https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&avoid=highways&mode=bicycling&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw";
     private static final String TAG = "TEST_MAPS";
     private static final float DEFAULT_ZOOM = 15f;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40, -168), new LatLng(71, 136));
@@ -63,7 +67,8 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        
+        GoogleDirectionsRetrofitBuilder googleDirectionsRetrofitBuilder = new GoogleDirectionsRetrofitBuilder();
+        DirectionResults directionResults = googleDirectionsRetrofitBuilder.getDirectionResults(url);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -166,15 +171,6 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
         updateCamera(latLng, DEFAULT_ZOOM, markerOptions.getTitle());
     }
 
-    /**
-     * Dispatch onResume() to fragments.  Note that for better inter-operation
-     * with older versions of the platform, at the point of this call the
-     * fragments attached to the activity are <em>not</em> resumed.  This means
-     * that in some cases the previous state may still be saved, not allowing
-     * fragment transactions that modify the state.  To correctly interact
-     * with fragments in their proper state, you should instead override
-     * {@link #onResumeFragments()}.
-     */
     @Override
     protected void onResume() {
         super.onResume();
