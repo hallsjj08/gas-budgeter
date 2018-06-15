@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,16 +35,20 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.directions_model.DirectionResults;
+import jordan_jefferson.com.gasbudgeter.network.AsyncResponse;
 import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsClient;
 import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsRetrofitBuilder;
 
 public class TestMapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
-        LocationListener, PlaceSelectionListener {
+        LocationListener, PlaceSelectionListener, AsyncResponse {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -51,8 +56,10 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
     private LocationRequest locationRequest;
     private Marker currentLocationMarker;
     private LocationCallback locationCallback;
+    private static DirectionResults mapDirectionResults;
+    private static List<LatLng> directionsOverview;
 
-    private String url = "https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&avoid=highways&mode=bicycling&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw";
+    private String[] url = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Los+Angeles,CA&waypoints=Joplin,MO|Oklahoma+City,OK&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
     private static final String TAG = "TEST_MAPS";
     private static final float DEFAULT_ZOOM = 15f;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40, -168), new LatLng(71, 136));
@@ -68,7 +75,8 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
         GoogleDirectionsRetrofitBuilder googleDirectionsRetrofitBuilder = new GoogleDirectionsRetrofitBuilder();
-        DirectionResults directionResults = googleDirectionsRetrofitBuilder.getDirectionResults(url);
+        googleDirectionsRetrofitBuilder.delegate = this;
+        googleDirectionsRetrofitBuilder.execute(url);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -204,5 +212,15 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
     public void onError(Status status) {
         Toast.makeText(this, "Unfortunately there was an error locating your place.", Toast.LENGTH_SHORT).show();
         Log.d(TAG, status.getStatusMessage());
+    }
+
+    @Override
+    public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview) {
+        if(mMap != null){
+            mMap.addPolyline(routeOverview);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
+        }else{
+            Log.d(TAG, "Map isn't ready");
+        }
     }
 }
