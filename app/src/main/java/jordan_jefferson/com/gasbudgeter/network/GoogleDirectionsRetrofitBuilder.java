@@ -42,7 +42,6 @@ public class GoogleDirectionsRetrofitBuilder extends AsyncTask<String, Void, Str
         try {
             directionResults = data.execute().body();
             polylineOverview = directionResults.getRoutes().get(0).getRoutePolyline().decodePolyPoints();
-//            Thread.sleep(10000);
             Iterable<LatLng> asdf = polylineOverview;
             polyOverview = new PolylineOptions().addAll(asdf);
             bounds = directionResults.getRoutes().get(0).getRouteBounds().getLatLngBounds();
