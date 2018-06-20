@@ -31,4 +31,6 @@ public class Garage extends AndroidViewModel{
         mGarageRepository.insert(car);
     }
 
+    public void delete(Car car) { mGarageRepository.delete(car); }
+
 }

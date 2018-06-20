@@ -1,5 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,6 +14,8 @@ import jordan_jefferson.com.gasbudgeter.R;
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    private FragmentTransaction fragmentTransaction;
+    private Fragment navigatedFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -20,13 +24,14 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_destination:
-                    mTextMessage.setText(R.string.destination);
+                    //mTextMessage.setText(R.string.destination);
                     return true;
                 case R.id.navigation_garage:
-                    mTextMessage.setText(R.string.garage);
+                    navigatedFragment = GarageFragment.newInstance();
+                    replaceFragment(navigatedFragment);
                     return true;
                 case R.id.navigation_about:
-                    mTextMessage.setText(R.string.about);
+                    //mTextMessage.setText(R.string.about);
                     return true;
             }
             return false;
@@ -41,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+    }
+
+    private void replaceFragment(Fragment fragment){
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
     }
 
 }
