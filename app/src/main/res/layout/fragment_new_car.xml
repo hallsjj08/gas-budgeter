@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/newCarText"
         android:layout_centerHorizontal="true"
+        android:id="@+id/bAddCar"
         style="@style/button_style"
         android:text="Enter Year, Make, Model, and Type"/>
 

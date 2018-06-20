@@ -1,6 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,10 +13,10 @@ import android.widget.TextView;
 import jordan_jefferson.com.gasbudgeter.R;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView mTextMessage;
     private FragmentTransaction fragmentTransaction;
-    private Fragment navigatedFragment;
+    private Fragment garageFragment;
+    private Fragment tripMapsFragment;
+    private Fragment aboutFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -24,11 +25,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_destination:
-                    //mTextMessage.setText(R.string.destination);
+                    if(tripMapsFragment == null){
+                        tripMapsFragment = TripMaps.newInstance();
+                    }
+                    replaceFragment(tripMapsFragment);
                     return true;
                 case R.id.navigation_garage:
-                    navigatedFragment = GarageFragment.newInstance();
-                    replaceFragment(navigatedFragment);
+                    if(garageFragment == null){
+                        garageFragment = GarageFragment.newInstance();
+                    }
+                    replaceFragment(garageFragment);
                     return true;
                 case R.id.navigation_about:
                     //mTextMessage.setText(R.string.about);
@@ -43,9 +49,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        tripMapsFragment = TripMaps.newInstance();
+        garageFragment = GarageFragment.newInstance();
+
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, tripMapsFragment);
+        fragmentTransaction.commit();
 
     }
 

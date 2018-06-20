@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".gui.MainActivity">
 
-    <FrameLayout
+    <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/fragment_container">
 
-
-    </FrameLayout>
+    </fragment>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
