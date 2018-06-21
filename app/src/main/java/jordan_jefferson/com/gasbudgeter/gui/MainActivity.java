@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -16,8 +15,6 @@ public class MainActivity extends AppCompatActivity {
     private Fragment tripMapsFragment;
     private Fragment aboutFragment;
     private BottomNavigationView navigation;
-
-    private int currentSelection;
 
     private static final String MAP_FRAG_TAG = "Trip_Maps_Fragment";
     private static final String GARAGE_FRAG_TAG = "Garage_Fragment";
@@ -32,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        int currentSelection;
         if(savedInstanceState == null){
             currentSelection = R.id.navigation_destination;
             tripMapsFragment = TripMaps.newInstance();
@@ -41,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
             currentSelection = savedInstanceState.getInt(SELECTED_ITEM_KEY);
             tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
             garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
-            navigation.setSelectedItemId(currentSelection);
         }
+
+        navigation.setSelectedItemId(currentSelection);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
