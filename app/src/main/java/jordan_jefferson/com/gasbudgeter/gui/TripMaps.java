@@ -23,7 +23,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -45,6 +44,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
 
     private GoogleMap mMap;
     private MapView mapView;
+    private View view;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     public TripMaps() {
@@ -71,7 +71,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
+        if(view == null){
+            view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
+        }
+
 
         mapView = view.findViewById(R.id.tripMap);
 
@@ -97,6 +100,13 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         super.onPause();
         mapView.onPause();
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -106,7 +116,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        super.onSaveInstanceState(outState); mapView.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
     @Override
     public void onLowMemory()
@@ -114,6 +125,12 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         super.onLowMemory();
         mapView.onLowMemory();
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
