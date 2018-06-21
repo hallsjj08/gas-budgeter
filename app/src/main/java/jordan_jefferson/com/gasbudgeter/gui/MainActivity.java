@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
 
     private int currentSelection;
-    private boolean mapsVisible, garageVisible, aboutVisible = false;
+    private boolean mapsVisible, garageVisible, aboutVisible;
 
     private static final String MAP_FRAG_TAG = "Trip_Maps_Fragment";
     private static final String GARAGE_FRAG_TAG = "Garage_Fragment";
@@ -35,10 +35,13 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_destination:
                     if(garageVisible){
                         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                        fragmentTransaction.addToBackStack(MAP_FRAG_TAG);
                         fragmentTransaction.replace(R.id.fragment_container, tripMapsFragment, MAP_FRAG_TAG);
-                        fragmentTransaction.commit();
                         mapsVisible = true;
+                        garageVisible = false;
+                        fragmentTransaction.commit();
+                        getSupportFragmentManager().executePendingTransactions();
+                        tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
                     }
                     return true;
                 case R.id.navigation_garage:
@@ -47,10 +50,13 @@ public class MainActivity extends AppCompatActivity {
                             garageFragment = GarageFragment.newInstance();
                         }
                         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                        fragmentTransaction.addToBackStack(GARAGE_FRAG_TAG);
                         fragmentTransaction.replace(R.id.fragment_container, garageFragment, GARAGE_FRAG_TAG);
-                        fragmentTransaction.commit();
                         garageVisible = true;
+                        mapsVisible = false;
+                        fragmentTransaction.commit();
+                        getSupportFragmentManager().executePendingTransactions();
+                        garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
                     }
                     return true;
                 case R.id.navigation_about:
@@ -78,10 +84,22 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.fragment_container, tripMapsFragment, MAP_FRAG_TAG)
                     .commit();
 
+            getSupportFragmentManager().executePendingTransactions();
+
+            tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
+
             mapsVisible = true;
+            garageVisible = false;
 
         }else{
             currentSelection = savedInstanceState.getInt(SELECTED_ITEM_KEY);
+            mapsVisible = savedInstanceState.getBoolean(MAP_FRAG_TAG);
+            garageVisible = savedInstanceState.getBoolean(GARAGE_FRAG_TAG);
+
+            tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
+            garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
+
+            navigation.setSelectedItemId(currentSelection);
         }
     }
 
@@ -89,11 +107,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_ITEM_KEY, navigation.getSelectedItemId());
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        navigation.setSelectedItemId(currentSelection);
+        outState.putBoolean(MAP_FRAG_TAG, mapsVisible);
+        outState.putBoolean(GARAGE_FRAG_TAG, garageVisible);
     }
 }
