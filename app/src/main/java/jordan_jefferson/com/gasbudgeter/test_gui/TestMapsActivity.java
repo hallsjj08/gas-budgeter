@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,7 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -43,7 +41,6 @@ import java.util.List;
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.directions_model.DirectionResults;
 import jordan_jefferson.com.gasbudgeter.network.AsyncResponse;
-import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsClient;
 import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsRetrofitBuilder;
 
 public class TestMapsActivity extends FragmentActivity implements OnMapReadyCallback,

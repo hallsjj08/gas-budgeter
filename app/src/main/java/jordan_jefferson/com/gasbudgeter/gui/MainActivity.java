@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void swapFragments(Fragment fragment, String tag){
         getSupportFragmentManager().beginTransaction()
-                .addToBackStack(tag)
                 .replace(R.id.fragment_container, fragment, tag)
                 .commit();
         getSupportFragmentManager().executePendingTransactions();

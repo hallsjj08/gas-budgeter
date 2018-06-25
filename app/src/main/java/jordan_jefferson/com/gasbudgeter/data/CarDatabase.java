@@ -1,15 +1,9 @@
 package jordan_jefferson.com.gasbudgeter.data;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-
-import jordan_jefferson.com.gasbudgeter.data.Car;
-import jordan_jefferson.com.gasbudgeter.data.CarDao;
 
 /*
 Abstract Class for the Room Library per the Android Documentation at:

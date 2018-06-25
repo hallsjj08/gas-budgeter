@@ -1,6 +1,5 @@
 package jordan_jefferson.com.gasbudgeter.util;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
