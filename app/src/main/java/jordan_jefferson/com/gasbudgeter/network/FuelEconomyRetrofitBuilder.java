@@ -1,5 +1,6 @@
 package jordan_jefferson.com.gasbudgeter.network;
 
+import java.io.IOException;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.data.Car;
@@ -16,6 +17,7 @@ public class FuelEconomyRetrofitBuilder {
     private String make;
     private String model;
     private Car myCar;
+    private Call<Car> car;
     private Call<ClientListItems> data;
     private FuelEconomyClient fuelEconomyClient;
     private List<ClientItem> clientItems;
@@ -55,42 +57,59 @@ public class FuelEconomyRetrofitBuilder {
                 break;
         }
 
-        data.enqueue(new Callback<ClientListItems>() {
-            @Override
-            public void onResponse(Call<ClientListItems> call, Response<ClientListItems> response) {
-                clientItems = response.body().clientItemList;
-            }
+        try {
+            clientItems = data.execute().body().clientItemList;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onFailure(Call<ClientListItems> call, Throwable t) {
-
-            }
-        });
+//        data.enqueue(new Callback<ClientListItems>() {
+//            @Override
+//            public void onResponse(Call<ClientListItems> call, Response<ClientListItems> response) {
+//                clientItems = response.body().clientItemList;
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ClientListItems> call, Throwable t) {
+//
+//            }
+//        });
 
         return clientItems;
     }
 
     private Car newCar(String id){
-        Call<Car> car = fuelEconomyClient.getClientVehicleData(id);
+        car = fuelEconomyClient.getClientVehicleData(id);
 
-        car.enqueue(new Callback<Car>() {
-            @Override
-            public void onResponse(Call<Car> call, Response<Car> response) {
-                myCar = response.body();
+        try {
+            myCar = car.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            }
-
-            @Override
-            public void onFailure(Call<Car> call, Throwable t) {
-
-            }
-        });
+//        car.enqueue(new Callback<Car>() {
+//            @Override
+//            public void onResponse(Call<Car> call, Response<Car> response) {
+//                myCar = response.body();
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Car> call, Throwable t) {
+//
+//            }
+//        });
 
         return myCar;
     }
 
     public void previousDataType(){
         dataType--;
+    }
+
+    public void cancelTransactions(){
+        data.cancel();
+        car.cancel();
     }
 
 }

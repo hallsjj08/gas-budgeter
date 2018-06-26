@@ -44,7 +44,7 @@
 
         <activity
             android:name=".test_gui.TestMapsActivity"
-            android:label="@string/title_activity_test_maps"></activity>
+            android:label="@string/title_activity_test_maps" />
         <activity
             android:name=".gui.MainActivity"
             android:label="@string/title_activity_main">
@@ -54,6 +54,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".gui.NewCar"
+            android:label="@string/title_activity_new_car"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

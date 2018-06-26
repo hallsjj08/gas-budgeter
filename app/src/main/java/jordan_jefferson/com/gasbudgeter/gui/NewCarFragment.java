@@ -1,6 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -60,6 +61,8 @@ public class NewCarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("NEW_CAR_FRAGMENT", "Add Car Button Clicked.");
+                Intent intent = new Intent(getActivity(), NewCar.class);
+                startActivityForResult(intent, 9001);
             }
         });
 
