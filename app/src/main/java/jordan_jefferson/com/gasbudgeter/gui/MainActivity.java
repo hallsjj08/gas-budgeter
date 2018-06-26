@@ -21,10 +21,14 @@ public class MainActivity extends AppCompatActivity {
     private static final String ABOUT_FRAG_TAG = "About_Fragment";
     private static final String SELECTED_ITEM_KEY = "Selected_Item";
 
+    private int fragContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fragContainer = R.id.fragment_container;
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState == null){
             currentSelection = R.id.navigation_destination;
             tripMapsFragment = TripMaps.newInstance();
-            swapFragments(tripMapsFragment, MAP_FRAG_TAG);
+            garageFragment = GarageFragment.newInstance();
 
         }else{
             currentSelection = savedInstanceState.getInt(SELECTED_ITEM_KEY);
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void swapFragments(Fragment fragment, String tag){
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, tag)
+                .replace(fragContainer, fragment, tag)
                 .commit();
         getSupportFragmentManager().executePendingTransactions();
     }
