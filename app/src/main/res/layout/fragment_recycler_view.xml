@@ -3,8 +3,8 @@
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/recyclerView"
+    android:id="@+id/dataRecyclerView"
     android:scrollbars="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray" />
+    android:background="#FFF" />

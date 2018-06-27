@@ -59,7 +59,7 @@ public class GarageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
         carListAdapter = new CarListAdapter(getContext());
         recyclerView.setAdapter(carListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

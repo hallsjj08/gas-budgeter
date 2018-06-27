@@ -17,6 +17,7 @@ public class NewCar extends AppCompatActivity {
 
     private FuelEconomyRetrofitBuilder fuelEconomyRetrofitBuilder;
     private Fragment progressFragment;
+    private Fragment dataItemYears;
     private String itemSelected = "";
     private List<ClientItem> clientItems;
 
@@ -62,6 +63,10 @@ public class NewCar extends AppCompatActivity {
             super.onPostExecute(aBoolean);
             if(aBoolean){
                 Log.d("CLIENT_ITEMS", "Success");
+                dataItemYears = DataItemFragment.newInstance(clientItems);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.new_car_items_container, dataItemYears, "Years")
+                        .commit();
             }else{
                 fuelEconomyRetrofitBuilder.cancelTransactions();
             }
