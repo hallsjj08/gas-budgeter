@@ -5,8 +5,6 @@ import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.data.Car;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
@@ -63,18 +61,6 @@ public class FuelEconomyRetrofitBuilder {
             e.printStackTrace();
         }
 
-//        data.enqueue(new Callback<ClientListItems>() {
-//            @Override
-//            public void onResponse(Call<ClientListItems> call, Response<ClientListItems> response) {
-//                clientItems = response.body().clientItemList;
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ClientListItems> call, Throwable t) {
-//
-//            }
-//        });
-
         return clientItems;
     }
 
@@ -86,19 +72,6 @@ public class FuelEconomyRetrofitBuilder {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        car.enqueue(new Callback<Car>() {
-//            @Override
-//            public void onResponse(Call<Car> call, Response<Car> response) {
-//                myCar = response.body();
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Car> call, Throwable t) {
-//
-//            }
-//        });
 
         return myCar;
     }
