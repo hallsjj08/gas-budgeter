@@ -19,6 +19,7 @@ import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
+import jordan_jefferson.com.gasbudgeter.data_adapters.CarListAdapter;
 import jordan_jefferson.com.gasbudgeter.view_model.Garage;
 
 public class GarageFragment extends Fragment {

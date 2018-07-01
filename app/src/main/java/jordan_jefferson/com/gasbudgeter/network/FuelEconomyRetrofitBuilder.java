@@ -33,6 +33,7 @@ public class FuelEconomyRetrofitBuilder {
     }
 
     public List<ClientItem> fetchData(String clientItemSelected){
+
         switch (dataType){
             case 0:
                 data = fuelEconomyClient.getClientVehicleYear();
@@ -64,7 +65,7 @@ public class FuelEconomyRetrofitBuilder {
         return clientItems;
     }
 
-    private Car newCar(String id){
+    public Car fetchCar(String id){
         car = fuelEconomyClient.getClientVehicleData(id);
 
         try {
@@ -78,6 +79,10 @@ public class FuelEconomyRetrofitBuilder {
 
     public void previousDataType(){
         dataType--;
+    }
+
+    public int getDataType(){
+        return dataType;
     }
 
     public void cancelTransactions(){

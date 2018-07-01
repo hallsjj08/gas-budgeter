@@ -61,7 +61,7 @@ public class NewCarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("NEW_CAR_FRAGMENT", "Add Car Button Clicked.");
-                Intent intent = new Intent(getActivity(), NewCar.class);
+                Intent intent = new Intent(getActivity(), NewCarActivity.class);
                 startActivityForResult(intent, 9001);
             }
         });

@@ -1,4 +1,4 @@
-package jordan_jefferson.com.gasbudgeter.gui;
+package jordan_jefferson.com.gasbudgeter.data_adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,10 +15,10 @@ import jordan_jefferson.com.gasbudgeter.data.Car;
 
 public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewHolder> {
 
-    private final LayoutInflater mLayoutInflator;
+    private final LayoutInflater mLayoutInflater;
     private List<Car> cars;
 
-    public CarListAdapter(Context context){ mLayoutInflator = LayoutInflater.from(context); }
+    public CarListAdapter(Context context){ mLayoutInflater = LayoutInflater.from(context); }
 
     class CarViewHolder extends RecyclerView.ViewHolder{
 
@@ -38,7 +38,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
     @NonNull
     @Override
     public CarListAdapter.CarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = mLayoutInflator.inflate(R.layout.car_template_row, parent, false);
+        View itemView = mLayoutInflater.inflate(R.layout.car_template_row, parent, false);
         return new CarViewHolder(itemView);
     }
 
@@ -54,7 +54,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
 
     }
 
-    void setCars(List<Car> cars){
+    public void setCars(List<Car> cars){
         this.cars = cars;
         notifyDataSetChanged();
     }

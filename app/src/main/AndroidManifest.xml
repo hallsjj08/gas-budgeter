@@ -50,7 +50,7 @@
             android:label="@string/title_activity_main"/>
 
         <activity
-            android:name=".gui.NewCar"
+            android:name=".gui.NewCarActivity"
             android:label="@string/title_activity_new_car"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>

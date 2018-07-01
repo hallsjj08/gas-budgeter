@@ -3,8 +3,10 @@ package jordan_jefferson.com.gasbudgeter.network;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
+
 @Root(name = "menuItem")
-public class ClientItem{
+public class ClientItem implements Serializable{
     @Element(name = "text")
     private String text;
 

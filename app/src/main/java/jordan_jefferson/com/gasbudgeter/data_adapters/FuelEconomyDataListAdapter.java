@@ -1,4 +1,4 @@
-package jordan_jefferson.com.gasbudgeter.gui;
+package jordan_jefferson.com.gasbudgeter.data_adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
+import jordan_jefferson.com.gasbudgeter.gui.RecyclerViewItemClickListener;
 import jordan_jefferson.com.gasbudgeter.network.ClientItem;
 
 public class FuelEconomyDataListAdapter extends
@@ -18,19 +19,34 @@ public class FuelEconomyDataListAdapter extends
 
     private LayoutInflater mLayoutInflater;
     private List<ClientItem> clientItems;
+    private RecyclerViewItemClickListener itemClickListener;
 
-    public FuelEconomyDataListAdapter(List<ClientItem> clientListItems, Context context){
+    public FuelEconomyDataListAdapter(List<ClientItem> clientListItems, Context context,
+                                      RecyclerViewItemClickListener itemClickListener){
         this.mLayoutInflater = LayoutInflater.from(context);
         this.clientItems = clientListItems;
+        this.itemClickListener = itemClickListener;
     }
 
-    public class FuelEconomyDataViewHolder extends RecyclerView.ViewHolder {
+    public class FuelEconomyDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView dataView;
 
         public FuelEconomyDataViewHolder(View itemView) {
             super(itemView);
             dataView = itemView.findViewById(R.id.fuelEconomyItem);
+
+            itemView.setOnClickListener(this);
+        }
+
+        /**
+         * Called when a view has been clicked.
+         *
+         * @param v The view that was clicked.
+         */
+        @Override
+        public void onClick(View v) {
+            itemClickListener.recyclerViewItemClicked(v, getAdapterPosition());
         }
     }
 
@@ -56,5 +72,10 @@ public class FuelEconomyDataListAdapter extends
             return clientItems.size();
         }
         return 0;
+    }
+
+    public void setApiListData(List<ClientItem> clientItems) {
+        this.clientItems = clientItems;
+        notifyDataSetChanged();
     }
 }
