@@ -24,6 +24,7 @@ import jordan_jefferson.com.gasbudgeter.view_model.FuelEconomyApi;
 public class DataItemFragment extends Fragment implements RecyclerViewItemClickListener {
 
     private static final String ARG_PARAM1 = "param1";
+    private static final String TAG = "DATA FRAGMENT";
     private String selectedItem = "";
     private List<ClientItem> clientItems;
 
@@ -41,6 +42,7 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, (Serializable) clientItems);
         fragment.setArguments(args);
+        Log.d(TAG, "New Instance");
         return fragment;
     }
 

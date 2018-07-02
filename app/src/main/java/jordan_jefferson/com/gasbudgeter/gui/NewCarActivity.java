@@ -80,7 +80,8 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
         dataItemFragment = DataItemFragment.newInstance(clientItems);
 
         getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_out_right, android.R.anim.slide_in_left)
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,
+                        android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .add(R.id.new_car_items_container, dataItemFragment)
                 .addToBackStack(null)
                 .commit();

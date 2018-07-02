@@ -3,11 +3,13 @@ package jordan_jefferson.com.gasbudgeter.view_model;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import jordan_jefferson.com.gasbudgeter.data.FuelEconomyRepository;
 
 public class FuelEconomyApi extends AndroidViewModel {
 
+    private static final String TAG = "FUEL_ECO_VIEWMODEL";
     private FuelEconomyRepository fuelEconomyRepository;
 
     public FuelEconomyApi(@NonNull Application application) {
@@ -17,7 +19,9 @@ public class FuelEconomyApi extends AndroidViewModel {
 
     }
 
-    public void fetchNewApiData(String selectedItem) { fuelEconomyRepository.fetchApiListData(selectedItem); }
+    public void fetchNewApiData(String selectedItem) { 
+        Log.d(TAG, "Fetching new data");
+        fuelEconomyRepository.fetchApiListData(selectedItem); }
 
     public void fetchNewApiCarData(String vehicleId) { fuelEconomyRepository.fetchApiCarData(vehicleId); }
 
