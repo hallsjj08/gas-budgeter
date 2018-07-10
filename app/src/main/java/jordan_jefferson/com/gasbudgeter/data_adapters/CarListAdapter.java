@@ -2,10 +2,12 @@ package jordan_jefferson.com.gasbudgeter.data_adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,16 +24,17 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
 
     class CarViewHolder extends RecyclerView.ViewHolder{
 
-        TextView year;
-        TextView make;
-        TextView model;
+        CardView cv;
+        ImageView imageView;
+        TextView carText;
 
-        public CarViewHolder(View itemView) {
+        private CarViewHolder(View itemView) {
             super(itemView);
 
-            year = itemView.findViewById(R.id.year);
-            make = itemView.findViewById(R.id.make);
-            model = itemView.findViewById(R.id.model);
+            cv = itemView.findViewById(R.id.card_view);
+            imageView = itemView.findViewById(R.id.thumbnail);
+            carText = itemView.findViewById(R.id.myCarText);
+
         }
     }
 
@@ -47,9 +50,12 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
     public void onBindViewHolder(@NonNull CarListAdapter.CarViewHolder holder, int position) {
 
         if(cars != null){
-            holder.year.setText(cars.get(position).getYear() + "");
-            holder.make.setText(cars.get(position).getMake());
-            holder.model.setText(cars.get(position).getModel());
+
+            String userCarDescription = cars.get(position).getYear() + " "
+                    + cars.get(position).getMake() + " "
+                    + cars.get(position).getModel();
+
+            holder.carText.setText(userCarDescription);
         }
 
     }

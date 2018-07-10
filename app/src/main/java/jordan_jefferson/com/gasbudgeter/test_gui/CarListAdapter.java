@@ -29,9 +29,9 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
         public CarViewHolder(View itemView) {
             super(itemView);
 
-            year = itemView.findViewById(R.id.year);
-            make = itemView.findViewById(R.id.make);
-            model = itemView.findViewById(R.id.model);
+//            year = itemView.findViewById(R.id.year);
+//            make = itemView.findViewById(R.id.make);
+//            model = itemView.findViewById(R.id.model);
         }
     }
 
@@ -47,9 +47,9 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
     public void onBindViewHolder(@NonNull CarListAdapter.CarViewHolder holder, int position) {
 
         if(cars != null){
-            holder.year.setText(cars.get(position).getYear() + "");
-            holder.make.setText(cars.get(position).getMake());
-            holder.model.setText(cars.get(position).getModel());
+//            holder.year.setText(cars.get(position).getYear() + "");
+//            holder.make.setText(cars.get(position).getMake());
+//            holder.model.setText(cars.get(position).getModel());
         }
 
     }

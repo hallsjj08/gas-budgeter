@@ -1,8 +1,10 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import jordan_jefferson.com.gasbudgeter.R;
+import jordan_jefferson.com.gasbudgeter.data.Car;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,21 +21,20 @@ import jordan_jefferson.com.gasbudgeter.R;
  * create an instance of this fragment.
  */
 public class NewCarFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "NEW_CAR_FRAG";
 
+
+    public interface CarResult{
+        void onCarResultOk(Car car);
+    }
+
+    public static CarResult carResult = null;
 
     public NewCarFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static NewCarFragment newInstance() {
         NewCarFragment fragment = new NewCarFragment();
         Bundle args = new Bundle();
@@ -44,13 +46,12 @@ public class NewCarFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            Log.d(TAG, "Has Saved State");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_car, container, false);
@@ -69,4 +70,17 @@ public class NewCarFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case 9001:
+                if(resultCode == Activity.RESULT_OK){
+                    Car car = (Car) data.getSerializableExtra(NewCarActivity.NEW_CAR_KEY);
+                    Log.d(TAG, car.getMake());
+                    carResult.onCarResultOk(car);
+                    assert getActivity() != null;
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+        }
+    }
 }

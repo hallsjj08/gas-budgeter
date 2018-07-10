@@ -22,14 +22,14 @@ import jordan_jefferson.com.gasbudgeter.data.Car;
 import jordan_jefferson.com.gasbudgeter.data_adapters.CarListAdapter;
 import jordan_jefferson.com.gasbudgeter.view_model.Garage;
 
-public class GarageFragment extends Fragment {
+public class GarageFragment extends Fragment implements NewCarFragment.CarResult {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG = "GARAGE_FRAGMENT";
 
     private CarListAdapter carListAdapter;
+    private Garage viewModel;
 
     private FragmentTransaction fragmentTransaction;
-
 
     public GarageFragment() {
         // Required empty public constructor
@@ -52,6 +52,8 @@ public class GarageFragment extends Fragment {
            Log.d(TAG, "Has Saved State");
         }
         Log.d(TAG, "Created");
+
+        NewCarFragment.carResult = this;
     }
 
     @Override
@@ -62,10 +64,9 @@ public class GarageFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
         carListAdapter = new CarListAdapter(getContext());
-        recyclerView.setAdapter(carListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Garage viewModel = ViewModelProviders.of(this).get(Garage.class);
+        viewModel = ViewModelProviders.of(this).get(Garage.class);
 
         viewModel.getCars().observe(this, new Observer<List<Car>>() {
             @Override
@@ -76,6 +77,7 @@ public class GarageFragment extends Fragment {
                     assert getActivity() != null;
                     fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.fragment_container, NewCarFragment.newInstance());
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }else{
                     carListAdapter.setCars(cars);
@@ -86,7 +88,14 @@ public class GarageFragment extends Fragment {
 
         Log.d(TAG, "View Created");
 
+        recyclerView.setAdapter(carListAdapter);
+
         return view;
     }
 
+    @Override
+    public void onCarResultOk(Car car) {
+        viewModel.insert(car);
+        Log.d(TAG, "Car added to garage");
+    }
 }
