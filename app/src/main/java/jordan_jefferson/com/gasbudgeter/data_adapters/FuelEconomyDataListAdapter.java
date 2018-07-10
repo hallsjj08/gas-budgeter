@@ -32,7 +32,7 @@ public class FuelEconomyDataListAdapter extends
 
         TextView dataView;
 
-        public FuelEconomyDataViewHolder(View itemView) {
+        private FuelEconomyDataViewHolder(View itemView) {
             super(itemView);
             dataView = itemView.findViewById(R.id.fuelEconomyItem);
 
@@ -72,10 +72,5 @@ public class FuelEconomyDataListAdapter extends
             return clientItems.size();
         }
         return 0;
-    }
-
-    public void setApiListData(List<ClientItem> clientItems) {
-        this.clientItems = clientItems;
-        notifyDataSetChanged();
     }
 }
