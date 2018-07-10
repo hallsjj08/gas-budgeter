@@ -25,18 +25,16 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
 
     private static final String ARG_PARAM1 = "param1";
     private static final String TAG = "DATA FRAGMENT";
-    private String selectedItem = "";
     private List<ClientItem> clientItems;
 
     FuelEconomyDataListAdapter fuelEconomyDataListAdapter;
 
-    private FuelEconomyApi viewmodel;
+    private FuelEconomyApi viewModel;
 
     public DataItemFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static DataItemFragment newInstance(List<ClientItem> clientItems) {
         DataItemFragment fragment = new DataItemFragment();
         Bundle args = new Bundle();
@@ -50,6 +48,7 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            //noinspection unchecked
             this.clientItems = (List<ClientItem>) getArguments().getSerializable(ARG_PARAM1);
         }
 
@@ -62,6 +61,8 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
+        
+        assert getContext() != null;
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
         fuelEconomyDataListAdapter = new FuelEconomyDataListAdapter(clientItems, getContext(), this);
@@ -75,20 +76,22 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewmodel = ViewModelProviders.of(getActivity()).get(FuelEconomyApi.class);
+        assert getActivity() != null;
+        viewModel = ViewModelProviders.of(getActivity()).get(FuelEconomyApi.class);
 
     }
 
     @Override
     public void recyclerViewItemClicked(View v, int position) {
 
+        assert getActivity() != null;
         Log.d("STACK_COUNT", "" + getActivity().getSupportFragmentManager().getBackStackEntryCount());
         if(getActivity().getSupportFragmentManager().getBackStackEntryCount() == 4){
             String vehicleId = clientItems.get(position).getValue();
-            viewmodel.fetchNewApiCarData(vehicleId);
+            viewModel.fetchNewApiCarData(vehicleId);
         }else{
-            selectedItem = clientItems.get(position).getText();
-            viewmodel.fetchNewApiData(selectedItem);
+            String selectedItem = clientItems.get(position).getText();
+            viewModel.fetchNewApiData(selectedItem);
         }
     }
 
