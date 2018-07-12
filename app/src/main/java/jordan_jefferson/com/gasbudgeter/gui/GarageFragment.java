@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,7 +61,19 @@ public class GarageFragment extends Fragment implements NewCarFragment.CarResult
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View view = inflater.inflate(R.layout.garage_fragment, container, false);
+
+        FloatingActionButton fab = view.findViewById(R.id.fab_add);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, NewCarFragment.newInstance())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
         carListAdapter = new CarListAdapter(getContext());

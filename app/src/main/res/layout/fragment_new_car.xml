@@ -14,7 +14,7 @@
         android:layout_above="@id/newCarText"
         android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
-        android:background="@drawable/ic_new_car_green_250dp"/>
+        android:src="@drawable/ic_new_car_green_250dp"/>
 
     <TextView
         android:layout_width="wrap_content"
