@@ -23,20 +23,16 @@ import jordan_jefferson.com.gasbudgeter.data.Car;
 public class NewCarFragment extends Fragment {
 
     private static final String TAG = "NEW_CAR_FRAG";
+    private static OnClickCarData onClickCarData;
 
-
-    public interface CarResult{
-        void onCarResultOk(Car car);
-    }
-
-    public static CarResult carResult = null;
 
     public NewCarFragment() {
         // Required empty public constructor
     }
 
-    public static NewCarFragment newInstance() {
+    public static NewCarFragment newInstance(OnClickCarData newClickCarData) {
         NewCarFragment fragment = new NewCarFragment();
+        onClickCarData = newClickCarData;
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -77,7 +73,7 @@ public class NewCarFragment extends Fragment {
                 if(resultCode == Activity.RESULT_OK){
                     Car car = (Car) data.getSerializableExtra(NewCarActivity.NEW_CAR_KEY);
                     Log.d(TAG, car.getMake());
-                    carResult.onCarResultOk(car);
+                    onClickCarData.onCarResultOk(car);
                     assert getActivity() != null;
                     getActivity().getSupportFragmentManager().popBackStack();
                 }

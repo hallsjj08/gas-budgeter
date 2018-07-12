@@ -3,6 +3,7 @@ package jordan_jefferson.com.gasbudgeter.gui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,9 +24,11 @@ import jordan_jefferson.com.gasbudgeter.data.Car;
 import jordan_jefferson.com.gasbudgeter.data_adapters.CarListAdapter;
 import jordan_jefferson.com.gasbudgeter.view_model.Garage;
 
-public class GarageFragment extends Fragment implements NewCarFragment.CarResult {
+public class GarageFragment extends Fragment implements OnClickCarData {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG = "GARAGE_FRAGMENT";
+    public static final String EDIT_CAR_EXTRA = "Edit Car Key";
+    public static final String VIEW_CAR_EXTRA = "View Car Key";
 
     private CarListAdapter carListAdapter;
     private Garage viewModel;
@@ -53,8 +56,6 @@ public class GarageFragment extends Fragment implements NewCarFragment.CarResult
            Log.d(TAG, "Has Saved State");
         }
         Log.d(TAG, "Created");
-
-        NewCarFragment.carResult = this;
     }
 
     @Override
@@ -68,15 +69,16 @@ public class GarageFragment extends Fragment implements NewCarFragment.CarResult
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                assert getActivity() != null;
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, NewCarFragment.newInstance())
+                        .replace(R.id.fragment_container, NewCarFragment.newInstance(GarageFragment.this))
                         .addToBackStack(null)
                         .commit();
             }
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
-        carListAdapter = new CarListAdapter(getContext());
+        carListAdapter = new CarListAdapter(getContext(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         viewModel = ViewModelProviders.of(this).get(Garage.class);
@@ -89,7 +91,7 @@ public class GarageFragment extends Fragment implements NewCarFragment.CarResult
                     Log.d(TAG, "Garage is empty.");
                     assert getActivity() != null;
                     fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, NewCarFragment.newInstance());
+                    fragmentTransaction.replace(R.id.fragment_container, NewCarFragment.newInstance(GarageFragment.this));
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }else{
@@ -110,5 +112,18 @@ public class GarageFragment extends Fragment implements NewCarFragment.CarResult
     public void onCarResultOk(Car car) {
         viewModel.insert(car);
         Log.d(TAG, "Car added to garage");
+    }
+
+    @Override
+    public void onClickEditCar(Car car) {
+        Log.d(TAG, "Edit Car Button Clicked.");
+//        Intent intent = new Intent(this, EditCarActivity.class);
+//        intent.putExtra(EDIT_CAR_EXTRA, car);
+//        startActivityForResult(intent, 9002);
+    }
+
+    @Override
+    public void onClickViewCarSpecs(Car car) {
+        Log.d(TAG, "View Specs Button Clicked");
     }
 }
