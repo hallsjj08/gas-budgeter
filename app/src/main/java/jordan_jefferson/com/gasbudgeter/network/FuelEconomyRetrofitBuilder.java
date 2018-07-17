@@ -1,6 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.network;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.data.Car;
@@ -83,6 +84,14 @@ public class FuelEconomyRetrofitBuilder {
 
     public int getDataType(){
         return dataType;
+    }
+
+    public void setDataType(int dataType){ this.dataType = dataType; }
+
+    public void setData(ArrayList<String> params){
+        this.year = params.get(0);
+        this.make = params.get(1);
+        this.model = params.get(2);
     }
 
     public void cancelTransactions(){

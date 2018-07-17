@@ -3,6 +3,7 @@ package jordan_jefferson.com.gasbudgeter.data;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.network.ClientItem;
@@ -32,6 +33,10 @@ public class FuelEconomyRepository {
     public int getDataType(){
         return fuelEconomyRetrofitBuilder.getDataType();
     }
+
+    public void setDataType(int dataType){ fuelEconomyRetrofitBuilder.setDataType(dataType);}
+
+    public void setData(ArrayList<String> params) {fuelEconomyRetrofitBuilder.setData(params);}
 
     public void fetchApiListData(String selectedItem){
         this.fuelEcoDataAsync = new FuelEcoDataAsync(fuelEconomyRetrofitBuilder);

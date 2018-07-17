@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
@@ -117,9 +118,16 @@ public class GarageFragment extends Fragment implements OnClickCarData {
     @Override
     public void onClickEditCar(Car car) {
         Log.d(TAG, "Edit Car Button Clicked.");
-//        Intent intent = new Intent(this, EditCarActivity.class);
-//        intent.putExtra(EDIT_CAR_EXTRA, car);
-//        startActivityForResult(intent, 9002);
+        Intent intent = new Intent(getActivity(), EditCarActivity.class);
+        ArrayList<String> carParams = new ArrayList<>();
+        carParams.add(car.getYear() + "");
+        carParams.add(car.getMake());
+        carParams.add(car.getModel());
+//        carParams.add(car.getType);
+        Bundle args = new Bundle();
+        args.putStringArrayList(EDIT_CAR_EXTRA, carParams);
+        intent.putExtra(EDIT_CAR_EXTRA, args);
+        startActivityForResult(intent, 9002);
     }
 
     @Override

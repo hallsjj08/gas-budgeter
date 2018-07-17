@@ -5,6 +5,8 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import jordan_jefferson.com.gasbudgeter.data.FuelEconomyRepository;
 
 public class FuelEconomyApi extends AndroidViewModel {
@@ -26,5 +28,9 @@ public class FuelEconomyApi extends AndroidViewModel {
     public void fetchNewApiCarData(String vehicleId) { fuelEconomyRepository.fetchApiCarData(vehicleId); }
 
     public void cancelAllApiTransactions() { fuelEconomyRepository.cancelDataFetch(); }
+
+    public void setDataType(int dataType) { fuelEconomyRepository.setDataType(dataType); }
+
+    public void setData(ArrayList<String> params) {fuelEconomyRepository.setData(params);}
 
 }
