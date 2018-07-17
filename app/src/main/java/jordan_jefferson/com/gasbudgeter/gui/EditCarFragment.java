@@ -1,5 +1,6 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -72,6 +73,8 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
         setClickListener(buttonModel, 2);
         setClickListener(buttonType, 3);
 
+        viewModel = ViewModelProviders.of(this).get(FuelEconomyApi.class);
+
         return view;
     }
 
@@ -83,8 +86,6 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
             }
         });
     }
-
-
 
     @Override
     public void onPreExecute() {
