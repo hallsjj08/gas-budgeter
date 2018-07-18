@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.directions_model.DirectionResults;
+import jordan_jefferson.com.gasbudgeter.interface_files.AsyncResponse;
+import jordan_jefferson.com.gasbudgeter.interface_files.GoogleDirectionsClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
-import jordan_jefferson.com.gasbudgeter.network.FuelEconomyClient;
+import jordan_jefferson.com.gasbudgeter.interface_files.FuelEconomyClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

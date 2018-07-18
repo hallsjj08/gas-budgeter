@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.data.Car;
+import jordan_jefferson.com.gasbudgeter.interface_files.FuelEconomyClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
@@ -86,9 +87,8 @@ public class FuelEconomyRetrofitBuilder {
         return dataType;
     }
 
-    public void setDataType(int dataType){ this.dataType = dataType; }
-
-    public void setData(ArrayList<String> params){
+    public void setDataType(ArrayList<String> params, int dataType){
+        this.dataType = dataType;
         this.year = params.get(0);
         this.make = params.get(1);
         this.model = params.get(2);

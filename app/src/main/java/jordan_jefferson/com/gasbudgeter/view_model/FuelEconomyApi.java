@@ -29,8 +29,7 @@ public class FuelEconomyApi extends AndroidViewModel {
 
     public void cancelAllApiTransactions() { fuelEconomyRepository.cancelDataFetch(); }
 
-    public void setDataType(int dataType) { fuelEconomyRepository.setDataType(dataType); }
-
-    public void setData(ArrayList<String> params) {fuelEconomyRepository.setData(params);}
-
+    public void setDataType(ArrayList<String> params, int dataType) {
+        fuelEconomyRepository.setDataType(params, dataType);
+    }
 }

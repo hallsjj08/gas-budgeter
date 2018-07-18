@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import jordan_jefferson.com.gasbudgeter.interface_files.CarDao;
+
 public class GarageRepository {
 
     private CarDao mCarDao;

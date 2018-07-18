@@ -1,4 +1,4 @@
-package jordan_jefferson.com.gasbudgeter.network;
+package jordan_jefferson.com.gasbudgeter.interface_files;
 
 import jordan_jefferson.com.gasbudgeter.directions_model.DirectionResults;
 import retrofit2.Call;

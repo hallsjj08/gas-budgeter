@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
-import jordan_jefferson.com.gasbudgeter.gui.RecyclerViewItemClickListener;
+import jordan_jefferson.com.gasbudgeter.interface_files.RecyclerViewItemClickListener;
 import jordan_jefferson.com.gasbudgeter.network.ClientItem;
 
 public class FuelEconomyDataListAdapter extends

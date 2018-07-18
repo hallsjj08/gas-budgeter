@@ -1,7 +1,6 @@
 package jordan_jefferson.com.gasbudgeter.data_adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,7 @@ import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
-import jordan_jefferson.com.gasbudgeter.gui.OnClickCarData;
+import jordan_jefferson.com.gasbudgeter.interface_files.OnClickCarData;
 
 public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewHolder> {
 

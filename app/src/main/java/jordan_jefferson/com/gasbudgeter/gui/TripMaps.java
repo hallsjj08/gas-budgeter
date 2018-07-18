@@ -28,7 +28,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import jordan_jefferson.com.gasbudgeter.R;
-import jordan_jefferson.com.gasbudgeter.network.AsyncResponse;
+import jordan_jefferson.com.gasbudgeter.interface_files.AsyncResponse;
 
 /**
  * A simple {@link Fragment} subclass.

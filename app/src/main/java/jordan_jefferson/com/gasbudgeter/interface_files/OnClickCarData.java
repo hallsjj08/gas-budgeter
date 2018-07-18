@@ -1,4 +1,4 @@
-package jordan_jefferson.com.gasbudgeter.gui;
+package jordan_jefferson.com.gasbudgeter.interface_files;
 
 import jordan_jefferson.com.gasbudgeter.data.Car;
 

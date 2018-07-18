@@ -1,4 +1,4 @@
-package jordan_jefferson.com.gasbudgeter.network;
+package jordan_jefferson.com.gasbudgeter.interface_files;
 
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;

@@ -40,7 +40,7 @@ import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.directions_model.DirectionResults;
-import jordan_jefferson.com.gasbudgeter.network.AsyncResponse;
+import jordan_jefferson.com.gasbudgeter.interface_files.AsyncResponse;
 import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsRetrofitBuilder;
 
 public class TestMapsActivity extends FragmentActivity implements OnMapReadyCallback,

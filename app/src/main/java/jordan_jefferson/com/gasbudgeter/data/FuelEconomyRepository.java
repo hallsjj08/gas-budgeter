@@ -34,9 +34,9 @@ public class FuelEconomyRepository {
         return fuelEconomyRetrofitBuilder.getDataType();
     }
 
-    public void setDataType(int dataType){ fuelEconomyRetrofitBuilder.setDataType(dataType);}
-
-    public void setData(ArrayList<String> params) {fuelEconomyRetrofitBuilder.setData(params);}
+    public void setDataType(ArrayList<String> carParams, int dataType) {
+        fuelEconomyRetrofitBuilder.setDataType(carParams, dataType);
+    }
 
     public void fetchApiListData(String selectedItem){
         this.fuelEcoDataAsync = new FuelEcoDataAsync(fuelEconomyRetrofitBuilder);

@@ -77,7 +77,7 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
                 .remove(progressFragment)
                 .commitNow();
 
-        dataItemFragment = DataItemFragment.newInstance(clientItems);
+        dataItemFragment = DataItemFragment.newInstance("New Car", clientItems);
 
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,
