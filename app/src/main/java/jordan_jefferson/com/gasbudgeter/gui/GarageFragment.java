@@ -126,9 +126,21 @@ public class GarageFragment extends Fragment implements OnClickCarData {
         carParams.add(car.getModel());
 //        carParams.add(car.getType);
         Bundle args = new Bundle();
-        args.putStringArrayList(EDIT_CAR_EXTRA, carParams);
+        args.putSerializable(EDIT_CAR_EXTRA, car);
         intent.putExtra(EDIT_CAR_EXTRA, args);
         startActivityForResult(intent, 9002);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case 9002:
+                switch (resultCode){
+                    case EditCarFragment.RESULT_DELETE:
+                        viewModel.delete((Car) data.getSerializableExtra(EDIT_CAR_EXTRA));
+                        break;
+                }
+        }
     }
 
     @Override

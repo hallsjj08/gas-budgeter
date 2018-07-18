@@ -6,10 +6,11 @@ import android.os.Bundle;
 import java.util.ArrayList;
 
 import jordan_jefferson.com.gasbudgeter.R;
+import jordan_jefferson.com.gasbudgeter.data.Car;
 
 public class EditCarActivity extends AppCompatActivity {
 
-    private ArrayList<String> carParams;
+    private Car car;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +18,10 @@ public class EditCarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_car);
 
         Bundle bundle = getIntent().getBundleExtra(GarageFragment.EDIT_CAR_EXTRA);
-        carParams = bundle.getStringArrayList(GarageFragment.EDIT_CAR_EXTRA);
+        car = (Car) bundle.getSerializable(GarageFragment.EDIT_CAR_EXTRA);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.edit_car_fragment_container, EditCarFragment.newInstance(carParams))
+                .replace(R.id.edit_car_fragment_container, EditCarFragment.newInstance(car))
                 .commit();
     }
 }

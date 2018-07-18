@@ -1,6 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -23,21 +24,24 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
 
     private static final String ARG_PARAM1 = "param1";
     private static final String TAG = "EDIT_CAR_FRAG";
+    public static final int RESULT_DELETE = 100;
 
     private ProgressFragment progressFragment;
 
-    private ArrayList<String> params;
+    private ArrayList<String> params = new ArrayList<>();
 
     private FuelEconomyApi viewModel;
+
+    private Car car;
 
     public EditCarFragment() {
         // Required empty public constructor
     }
 
-    public static EditCarFragment newInstance(ArrayList<String> params) {
+    public static EditCarFragment newInstance(Car car) {
         EditCarFragment fragment = new EditCarFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_PARAM1, params);
+        args.putSerializable(ARG_PARAM1, car);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,7 +50,10 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.params = getArguments().getStringArrayList(ARG_PARAM1);
+            this.car = (Car) getArguments().getSerializable(ARG_PARAM1);
+            params.add(car.getYear() + "");
+            params.add(car.getMake());
+            params.add(car.getModel());
         }
         FuelEconomyRepository.callbacks = this;
     }
@@ -54,6 +61,7 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        assert getActivity() != null;
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_car, container, false);
 
@@ -66,6 +74,7 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
         Button buttonMake = view.findViewById(R.id.buttonMake);
         Button buttonModel = view.findViewById(R.id.buttonModel);
         Button buttonType = view.findViewById(R.id.buttonType);
+        Button removeVehicle = view.findViewById(R.id.remove_car_button);
 
         buttonYear.setText(params.get(0));
         buttonMake.setText(params.get(1));
@@ -75,6 +84,16 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
         setClickListener(buttonMake, 1);
         setClickListener(buttonModel, 2);
         setClickListener(buttonType, 3);
+
+        removeVehicle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra(GarageFragment.EDIT_CAR_EXTRA, car);
+                getActivity().setResult(RESULT_DELETE, intent);
+                getActivity().finish();
+            }
+        });
 
         viewModel = ViewModelProviders.of(this).get(FuelEconomyApi.class);
 
