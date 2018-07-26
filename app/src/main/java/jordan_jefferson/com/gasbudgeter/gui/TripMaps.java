@@ -21,11 +21,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.concurrent.Executor;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.interface_files.AsyncResponse;
@@ -40,18 +46,18 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         LocationListener, PlaceSelectionListener, AsyncResponse {
 
     private static final String TAG = "TripMapsFragment";
+    private static final float DEFAULT_ZOOM = 15f;
 
     private GoogleMap mMap;
-//    private View view;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
+    private Location lastKnownLocation;
 
     public TripMaps() {
         // Required empty public constructor
         setRetainInstance(true);
     }
 
-    // TODO: Rename and change types and number of parameters
     public static TripMaps newInstance() {
         TripMaps fragment = new TripMaps();
         Bundle args = new Bundle();
@@ -71,10 +77,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//        if(view == null){
-//            view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
-//        }
 
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
 
@@ -103,6 +105,30 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
+        getDeviceLocation();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getDeviceLocation(){
+        assert getActivity() != null;
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    lastKnownLocation = location;
+                    LatLng latLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                    updateCamera(latLng, DEFAULT_ZOOM, "Current Location");
+                }
+            }
+        });
+    }
+
+    private void updateCamera(LatLng latLng, float zoom, String title) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        mMap.clear();
+
+        MarkerOptions options = new MarkerOptions().position(latLng).title(title);
+        mMap.addMarker(options);
     }
 
     @Override
