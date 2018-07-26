@@ -1,9 +1,12 @@
 package jordan_jefferson.com.gasbudgeter.data;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import jordan_jefferson.com.gasbudgeter.interface_files.CarDao;
 
@@ -12,7 +15,7 @@ Abstract Class for the Room Library per the Android Documentation at:
 https://developer.android.com/training/data-storage/room/
  */
 
-@Database(entities = {Car.class}, version = 2, exportSchema = false)
+@Database(entities = {Car.class}, version = 3, exportSchema = false)
 public abstract class CarDatabase extends RoomDatabase {
 
     public abstract CarDao carDao();
@@ -23,42 +26,28 @@ public abstract class CarDatabase extends RoomDatabase {
         if(INSTANCE == null){
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     CarDatabase.class, "user_garage")
+                    .addMigrations(MIGRATION_2_3)
                     .build();
         }
 
         return INSTANCE;
     }
 
-//    private static RoomDatabase.Callback sRoomDatabaseCallback = new Callback() {
-//        /**
-//         * Called when the database has been opened.
-//         *
-//         * @param db The database.
-//         */
-//        @Override
-//        public void onOpen(@NonNull SupportSQLiteDatabase db) {
-//            super.onOpen(db);
-//            new PopulateDBAsync(INSTANCE).execute();
-//        }
-//    };
-//
-//    private static class PopulateDBAsync extends AsyncTask<Void, Void, Void> {
-//
-//        private final CarDao mDao;
-//
-//        PopulateDBAsync(CarDatabase db){
-//            mDao = db.carDao();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//            //mDao.deleteAll();
-//
-//            for(int i = 0; i < 5; i++){
-//                mDao.insertCar(new Car(i, "Ford", "Taurus", 2010 + i, 24, 18));
-//            }
-//            return null;
-//        }
-//    }
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+
+            database.execSQL("CREATE TABLE cars_new (_id INTEGER NOT NULL, pic_path TEXT, carId INTEGER NOT NULL," +
+                    "make TEXT, model TEXT, year INTEGER NOT NULL, vehicle_type TEXT, fuel_type TEXT, " +
+                    "city_mpg INTEGER NOT NULL, hwy_mpg INTEGER NOT NULL, PRIMARY KEY(_id))");
+
+            database.execSQL("INSERT INTO cars_new (carId, make, model, year, fuel_type, city_mpg, hwy_mpg)" +
+                    "SELECT carId, make, model, year, fuel_type, city_mpg, hwy_mpg FROM cars");
+
+            database.execSQL("DROP TABLE cars");
+
+            database.execSQL("ALTER TABLE cars_new RENAME TO cars");
+        }
+    };
 
 }

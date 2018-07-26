@@ -3,6 +3,7 @@ package jordan_jefferson.com.gasbudgeter.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.Nullable;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -22,7 +23,13 @@ Parameter carId will be assigned from the fueleconomy.gov API.
 @Root(name = "vehicle", strict = false)
 public class Car implements Serializable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "_id")
+    private int id;
+
+    @ColumnInfo(name = "pic_path")
+    private String carPicPath;
+
     @Element(name = "id")
     private int carId;
 
@@ -37,6 +44,9 @@ public class Car implements Serializable {
     @ColumnInfo(name = "year")
     @Element(name = "year")
     private int year;
+
+    @ColumnInfo(name = "vehicle_type")
+    private String vehicleType;
 
     @ColumnInfo(name = "fuel_type")
     @Element(name = "fuelType1")
@@ -54,20 +64,18 @@ public class Car implements Serializable {
 //    private int tankCapacity_gallons;
 
     //Retrofit needs an empty default constructor to build the object from xml data.
-    private Car(){}
+    public Car(){}
 
-    public Car(int carId,
-               String make,
-               String model,
-               int year,
-               String fuelType,
-               int city_mpg,
-               int hwy_mpg){
+    public Car(int id, String picPath, int carId, String make, String model,
+               int year, String vehicleType, String fuelType, int city_mpg, int hwy_mpg){
 
+        this.id = id;
+        this.carPicPath = picPath;
         this.carId = carId;
         this.make = make;
         this.model = model;
         this.year = year;
+        this.vehicleType = vehicleType;
         this.fuelType = fuelType;
         this.city_mpg = city_mpg;
         this.hwy_mpg = hwy_mpg;
@@ -81,6 +89,22 @@ public class Car implements Serializable {
 
     public double costOfGas(double priceOfGas, int totalDistance_miles){
         return priceOfGas/(hwy_mpg/totalDistance_miles);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCarPicPath() {
+        return carPicPath;
+    }
+
+    public void setCarPicPath(String carPicPath) {
+        this.carPicPath = carPicPath;
     }
 
     public int getCarId() {
@@ -115,6 +139,14 @@ public class Car implements Serializable {
         this.year = year;
     }
 
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
+
     public String getFuelType() {
         return fuelType;
     }
@@ -139,7 +171,7 @@ public class Car implements Serializable {
         this.hwy_mpg = hwy_mpg;
     }
 
-    //    public int getTankCapacity_gallons() {
+//        public int getTankCapacity_gallons() {
 //        return tankCapacity_gallons;
 //    }
 
