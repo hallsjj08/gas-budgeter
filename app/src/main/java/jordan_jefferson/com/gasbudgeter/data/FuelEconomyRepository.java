@@ -16,6 +16,8 @@ public class FuelEconomyRepository {
     private FuelEconomyRetrofitBuilder fuelEconomyRetrofitBuilder;
     private static final String TAG = "REPO";
 
+    private static String sVehicleType;
+
     public interface AsyncResponseCallbacks{
         void onPreExecute();
         void onPostDataExecute(List<ClientItem> newClientItems);
@@ -43,8 +45,9 @@ public class FuelEconomyRepository {
         fuelEcoDataAsync.execute(selectedItem);
     }
 
-    public void fetchApiCarData(String selectedItem) {
+    public void fetchApiCarData(String selectedItem, String vehicleType) {
         this.fuelEcoCarDataAsync = new FuelEcoCarDataAsync(fuelEconomyRetrofitBuilder);
+        sVehicleType = vehicleType;
         fuelEcoCarDataAsync.execute(selectedItem); }
 
     public void cancelDataFetch(){
@@ -124,6 +127,7 @@ public class FuelEconomyRepository {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if(aBoolean && newCar != null){
+                newCar.setVehicleType(sVehicleType);
                 callbacks.onPostCarExecute(newCar);
             }else{
                 Log.d(TAG, "Failed Retrieving Car");

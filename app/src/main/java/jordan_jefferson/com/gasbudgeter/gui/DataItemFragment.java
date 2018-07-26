@@ -94,8 +94,9 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
             case "New Car":
                 Log.d("STACK_COUNT", "" + getActivity().getSupportFragmentManager().getBackStackEntryCount());
                 if(getActivity().getSupportFragmentManager().getBackStackEntryCount() == 4){
+                    String vehicleType = clientItems.get(position).getText();
                     String vehicleId = clientItems.get(position).getValue();
-                    viewModel.fetchNewApiCarData(vehicleId);
+                    viewModel.fetchNewApiCarData(vehicleId, vehicleType);
                 }else{
                     String selectedItem = clientItems.get(position).getText();
                     viewModel.fetchNewApiData(selectedItem);

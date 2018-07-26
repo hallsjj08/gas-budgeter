@@ -25,7 +25,7 @@ public class FuelEconomyApi extends AndroidViewModel {
         Log.d(TAG, "Fetching new data");
         fuelEconomyRepository.fetchApiListData(selectedItem); }
 
-    public void fetchNewApiCarData(String vehicleId) { fuelEconomyRepository.fetchApiCarData(vehicleId); }
+    public void fetchNewApiCarData(String vehicleId, String vehicleType) { fuelEconomyRepository.fetchApiCarData(vehicleId, vehicleType); }
 
     public void cancelAllApiTransactions() { fuelEconomyRepository.cancelDataFetch(); }
 

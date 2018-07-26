@@ -54,6 +54,7 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
             params.add(car.getYear() + "");
             params.add(car.getMake());
             params.add(car.getModel());
+            params.add(car.getVehicleType());
         }
         FuelEconomyRepository.callbacks = this;
     }
@@ -79,6 +80,7 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
         buttonYear.setText(params.get(0));
         buttonMake.setText(params.get(1));
         buttonModel.setText(params.get(2));
+        buttonType.setText(params.get(3));
 
         setClickListener(buttonYear, 0);
         setClickListener(buttonMake, 1);
