@@ -36,6 +36,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
         CardView cv;
         ImageView imageView;
         TextView carText;
+        TextView mpgData;
         ImageButton editCarButton;
         Button viewSpecsButton;
 
@@ -45,6 +46,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
             cv = itemView.findViewById(R.id.card_view);
             imageView = itemView.findViewById(R.id.thumbnail);
             carText = itemView.findViewById(R.id.myCarText);
+            mpgData = itemView.findViewById(R.id.mpgData);
             editCarButton = itemView.findViewById(R.id.edit_car_button);
             viewSpecsButton = itemView.findViewById(R.id.view_specs_button);
 
@@ -68,11 +70,15 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
                     + cars.get(position).getMake() + " "
                     + cars.get(position).getModel();
 
+            String userCarMPGData = "City MPG: " + cars.get(position).getCity_mpg() +
+                    ", Highway MPG: " + cars.get(position).getHwy_mpg();
+
             if(cars.get(position).getCarPicPath() != null){
                 Log.d(TAG, "User has picture of car.");
             }
 
             holder.carText.setText(userCarDescription);
+            holder.mpgData.setText(userCarMPGData);
         }
 
         onClickEditCar(holder, position);

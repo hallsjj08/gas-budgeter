@@ -54,7 +54,7 @@
                 android:text="@string/test_text" />
 
             <TextView
-                android:id="@+id/cityMPG"
+                android:id="@+id/mpgData"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,17 +62,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="16dp"
                 android:text="@string/test_city_mpg" />
-
-            <TextView
-                android:id="@+id/hwyMPG"
-                style="@style/text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/myCarText"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_toEndOf="@id/cityMPG"
-                android:text="@string/test_hwy_mpg" />
 
             <Button
                 android:id="@+id/view_specs_button"
