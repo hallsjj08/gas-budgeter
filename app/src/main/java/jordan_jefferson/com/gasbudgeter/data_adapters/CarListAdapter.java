@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import jordan_jefferson.com.gasbudgeter.interface_files.OnClickCarData;
 
 public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewHolder> {
 
+    private static final String TAG = "CAR_LIST_ADAPTER_TAG";
     private final LayoutInflater mLayoutInflater;
     private List<Car> cars;
     private OnClickCarData onClickCarData;
@@ -65,6 +67,10 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
             String userCarDescription = cars.get(position).getYear() + " "
                     + cars.get(position).getMake() + " "
                     + cars.get(position).getModel();
+
+            if(cars.get(position).getCarPicPath() != null){
+                Log.d(TAG, "User has picture of car.");
+            }
 
             holder.carText.setText(userCarDescription);
         }
