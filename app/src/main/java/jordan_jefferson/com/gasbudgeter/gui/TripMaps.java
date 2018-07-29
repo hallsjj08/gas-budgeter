@@ -105,6 +105,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         getDeviceLocation();
     }
 
@@ -127,8 +128,11 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         mMap.clear();
 
-        MarkerOptions options = new MarkerOptions().position(latLng).title(title);
-        mMap.addMarker(options);
+        if(!title.equals("Current Location")){
+            MarkerOptions options = new MarkerOptions().position(latLng).title(title);
+            mMap.addMarker(options);
+        }
+
     }
 
     @Override
@@ -153,7 +157,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPlaceSelected(Place place) {
-
+        updateCamera(place.getLatLng(), DEFAULT_ZOOM, place.getName().toString());
     }
 
     @Override
