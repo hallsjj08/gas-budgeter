@@ -1,32 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    map:uiZoomControls="true"
-    map:uiZoomGestures="true"
-    map:mapType="normal"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_marginBottom="56dp"
     tools:context=".gui.MainActivity">
-    <fragment
-        android:id="@+id/tripMap"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        map:uiZoomControls="true"
+        map:uiZoomGestures="true"
+        map:mapType="normal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view"
-            android:layout_gravity="top"
-            android:layout_margin="16dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <fragment
+            android:id="@+id/tripMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            card_view:cardCornerRadius="4dp">
-            <fragment
-                android:id="@+id/trip_place_autocomplete_fragment"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view"
+                android:layout_gravity="top"
+                android:layout_margin="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment" />
-        </android.support.v7.widget.CardView>
-    </fragment>
-</LinearLayout>
+                android:layout_height="50dp"
+                card_view:cardCornerRadius="4dp">
+                <fragment
+                    android:id="@+id/trip_place_autocomplete_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment" />
+            </android.support.v7.widget.CardView>
+        </fragment>
+    </LinearLayout>
+
+    <include layout="@layout/place_selected_bottom_sheet"/>
+
+</android.support.design.widget.CoordinatorLayout>

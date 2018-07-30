@@ -56,7 +56,7 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
     private static DirectionResults mapDirectionResults;
     private static List<LatLng> directionsOverview;
 
-    private String[] url = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Los+Angeles,CA&waypoints=Joplin,MO|Oklahoma+City,OK&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
+    private String[] url = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Knoxville,TN&waypoints=Joplin,MO|Oklahoma+City,OK&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
     private static final String TAG = "TEST_MAPS";
     private static final float DEFAULT_ZOOM = 15f;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40, -168), new LatLng(71, 136));

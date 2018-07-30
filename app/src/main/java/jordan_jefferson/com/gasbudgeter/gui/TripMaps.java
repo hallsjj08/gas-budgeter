@@ -2,15 +2,21 @@ package jordan_jefferson.com.gasbudgeter.gui;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,6 +41,7 @@ import java.util.concurrent.Executor;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.interface_files.AsyncResponse;
+import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsRetrofitBuilder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,10 +55,21 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     private static final String TAG = "TripMapsFragment";
     private static final float DEFAULT_ZOOM = 15f;
 
+    private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Knoxville,TN&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
+    private static final String API_KEY = "key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw";
+    private static final String BASE_URL = "https://maps.googleapis.com/maps/api/directions/json?";
+    private String origin = "origin=";
+    private String destination = "destination=";
+    private String[] directionsUrl = new String[1];
+
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
     private Location lastKnownLocation;
+
+    private LinearLayout placeSelectedBottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private TextView tvPlace;
 
     public TripMaps() {
         // Required empty public constructor
@@ -80,6 +98,11 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
 
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
 
+        placeSelectedBottomSheet = view.findViewById(R.id.place_selected_bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(placeSelectedBottomSheet);
+
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.tripMap);
         mapFragment.getMapAsync(this);
 
@@ -89,6 +112,20 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
                 .findFragmentById(R.id.trip_place_autocomplete_fragment);
 
         autocompleteFragment.setOnPlaceSelectedListener(this);
+
+        tvPlace = view.findViewById(R.id.place_name);
+        Button bDirections = view.findViewById(R.id.directions);
+
+        bDirections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                directionsUrl[0] = BASE_URL + origin + "&" + destination + "&" + API_KEY;
+                Log.d(TAG, directionsUrl[0]);
+                GoogleDirectionsRetrofitBuilder googleDirectionsRetrofitBuilder = new GoogleDirectionsRetrofitBuilder();
+                googleDirectionsRetrofitBuilder.delegate = TripMaps.this;
+                googleDirectionsRetrofitBuilder.execute(directionsUrl);
+            }
+        });
 
         Log.d(TAG, "View Created");
         return view;
@@ -117,6 +154,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
             public void onSuccess(Location location) {
                 if(location != null){
                     lastKnownLocation = location;
+                    origin = origin + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
                     LatLng latLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                     updateCamera(latLng, DEFAULT_ZOOM, "Current Location");
                 }
@@ -157,16 +195,30 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPlaceSelected(Place place) {
-        updateCamera(place.getLatLng(), DEFAULT_ZOOM, place.getName().toString());
+        String placeName = place.getName().toString();
+        tvPlace.setText(placeName);
+        updateCamera(place.getLatLng(), DEFAULT_ZOOM, placeName);
+        if(place.getId() != null){
+            destination = destination + "place_id:" + place.getId();
+        }else{
+            destination = destination + place.getLatLng().latitude + "," + place.getLatLng().longitude;
+        }
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     @Override
     public void onError(Status status) {
-
+        Toast.makeText(getActivity(), "Unfortunately there was an error locating your place.", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, status.getStatusMessage());
     }
 
     @Override
     public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview) {
-
+        if(mMap != null){
+            mMap.addPolyline(routeOverview);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 25));
+        }else{
+            Log.d(TAG, "Error Loading Routes");
+        }
     }
 }

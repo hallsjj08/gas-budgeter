@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import jordan_jefferson.com.gasbudgeter.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MAIN";
     private Fragment garageFragment;
     private Fragment tripMapsFragment;
     private Fragment aboutFragment;
