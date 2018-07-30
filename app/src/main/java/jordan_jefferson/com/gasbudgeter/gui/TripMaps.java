@@ -216,7 +216,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview) {
         if(mMap != null){
             mMap.addPolyline(routeOverview);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 25));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 150));
         }else{
             Log.d(TAG, "Error Loading Routes");
         }

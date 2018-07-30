@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/place_name"
         android:layout_margin="16dp"
-        style="@style/text_style"
-        android:text="Knoxville, TN"/>
+        style="@style/text_style" />
 
     <Button
         android:layout_width="wrap_content"
