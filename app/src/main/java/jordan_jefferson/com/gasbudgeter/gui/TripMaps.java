@@ -156,6 +156,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.setIndoorEnabled(false);
         getDeviceLocation();
     }
 
@@ -212,6 +213,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         tvPlace.setText(placeName);
         updateCamera(place.getLatLng(), DEFAULT_ZOOM, placeName);
         if(place.getId() != null){
+            Log.d(TAG, place.getId());
             destination = destination + "place_id:" + place.getId();
         }else{
             destination = destination + place.getLatLng().latitude + "," + place.getLatLng().longitude;
@@ -232,7 +234,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
             placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
             mMap.addPolyline(routeOverview);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 150));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 100));
 
             tvDistance.setText(miles);
             tvTravelTime.setText(travelTime);
