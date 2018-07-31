@@ -212,7 +212,8 @@ public class TestMapsActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview) {
+    public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview,
+                                         String miles, String travelTime, long meters) {
         if(mMap != null){
             mMap.addPolyline(routeOverview);
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));

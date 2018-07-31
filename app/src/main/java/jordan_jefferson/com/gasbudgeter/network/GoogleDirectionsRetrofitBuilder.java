@@ -28,6 +28,10 @@ public class GoogleDirectionsRetrofitBuilder extends AsyncTask<String, Void, Str
     private LatLngBounds bounds;
     private PolylineOptions polyOverview;
 
+    private String miles;
+    private String travelTime;
+    private long meters;
+
     public GoogleDirectionsRetrofitBuilder(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DIRECTIONS_BASE_URL)
@@ -43,10 +47,15 @@ public class GoogleDirectionsRetrofitBuilder extends AsyncTask<String, Void, Str
 
         try {
             directionResults = data.execute().body();
+            assert directionResults != null;
             polylineOverview = directionResults.getRoutes().get(0).getRoutePolyline().decodePolyPoints();
             Iterable<LatLng> asdf = polylineOverview;
             polyOverview = new PolylineOptions().addAll(asdf);
             bounds = directionResults.getRoutes().get(0).getRouteBounds().getLatLngBounds();
+            miles = directionResults.getRoutes().get(0).getLegs().get(0).getLegDistance().getDistance();
+            meters = directionResults.getRoutes().get(0).getLegs().get(0).getLegDistance().getMeters();
+            travelTime = directionResults.getRoutes().get(0).getLegs().get(0).getLegDuration().getTravelDuration();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,6 +66,6 @@ public class GoogleDirectionsRetrofitBuilder extends AsyncTask<String, Void, Str
 
     @Override
     protected void onPostExecute(String result) {
-        delegate.onDirectionResultsUpdate(bounds, polyOverview);
+        delegate.onDirectionResultsUpdate(bounds, polyOverview, miles, travelTime, meters);
     }
 }

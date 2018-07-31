@@ -40,4 +40,6 @@
 
     <include layout="@layout/place_selected_bottom_sheet"/>
 
+    <include layout="@layout/directions_info_bottom_sheet"/>
+
 </android.support.design.widget.CoordinatorLayout>

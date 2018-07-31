@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,8 +69,13 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     private Location lastKnownLocation;
 
     private LinearLayout placeSelectedBottomSheet;
-    private BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout directionsInfoBottomSheet;
+    private BottomSheetBehavior placesBottomSheetBehavior;
+    private BottomSheetBehavior directionsBottomSheetBehavior;
+
     private TextView tvPlace;
+    private TextView tvTravelTime;
+    private TextView tvDistance;
 
     public TripMaps() {
         // Required empty public constructor
@@ -99,9 +105,13 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
 
         placeSelectedBottomSheet = view.findViewById(R.id.place_selected_bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(placeSelectedBottomSheet);
+        directionsInfoBottomSheet = view.findViewById(R.id.directions_info_bottom_sheet);
 
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        placesBottomSheetBehavior = BottomSheetBehavior.from(placeSelectedBottomSheet);
+        directionsBottomSheetBehavior = BottomSheetBehavior.from(directionsInfoBottomSheet);
+
+        placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        directionsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.tripMap);
         mapFragment.getMapAsync(this);
@@ -112,6 +122,9 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
                 .findFragmentById(R.id.trip_place_autocomplete_fragment);
 
         autocompleteFragment.setOnPlaceSelectedListener(this);
+
+        tvTravelTime = view.findViewById(R.id.travelTime);
+        tvDistance = view.findViewById(R.id.distance);
 
         tvPlace = view.findViewById(R.id.place_name);
         Button bDirections = view.findViewById(R.id.directions);
@@ -203,7 +216,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
         }else{
             destination = destination + place.getLatLng().latitude + "," + place.getLatLng().longitude;
         }
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     @Override
@@ -213,12 +226,18 @@ public class TripMaps extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview) {
-        if(mMap != null){
+    public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview,
+                                         String miles, String travelTime, long meters) {
+
+            placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
             mMap.addPolyline(routeOverview);
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 150));
-        }else{
-            Log.d(TAG, "Error Loading Routes");
-        }
+
+            tvDistance.setText(miles);
+            tvTravelTime.setText(travelTime);
+
+            directionsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
     }
 }

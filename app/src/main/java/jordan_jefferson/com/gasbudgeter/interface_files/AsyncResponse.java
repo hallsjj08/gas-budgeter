@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 public interface AsyncResponse {
 
-    void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview);
+    void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview,
+                                  String miles, String travelTime, long meters);
 
 }
