@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="1dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:elevation="12dp"
+        android:id="@+id/view2"
+        app:cardCornerRadius="40dp"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:layout_height="88dp"
+            android:layout_width="match_parent"
+            android:id="@+id/imageView1"
+            android:src="@drawable/black_car_small">
+        </ImageView>
+    </android.support.v7.widget.CardView>
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:id="@+id/year_make"
+    android:text="2011 Ford"
+    app:layout_constraintStart_toEndOf="@id/view2"/>
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:id="@+id/bottom_sheet_car_model"
+    android:text="Taurus FWD"
+    app:layout_constraintStart_toEndOf="@id/view2"
+    app:layout_constraintTop_toBottomOf="@id/year_make"
+    app:layout_constraintBottom_toTopOf="@id/fuel_cost"/>
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:id="@+id/fuel_cost"
+    android:text="Fuel Cost: "
+    app:layout_constraintStart_toEndOf="@id/view2"
+    app:layout_constraintBottom_toBottomOf="@id/view2"/>
+
+</android.support.constraint.ConstraintLayout>

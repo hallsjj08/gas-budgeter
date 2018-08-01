@@ -3,7 +3,7 @@ package jordan_jefferson.com.gasbudgeter.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -60,8 +60,6 @@ public class Car implements Serializable {
     @Element(name = "highway08")
     private int hwy_mpg;
 
-//    @ColumnInfo(name = "tank_capacity_gallons")
-//    private int tankCapacity_gallons;
 
     //Retrofit needs an empty default constructor to build the object from xml data.
     public Car(){}
@@ -79,16 +77,17 @@ public class Car implements Serializable {
         this.fuelType = fuelType;
         this.city_mpg = city_mpg;
         this.hwy_mpg = hwy_mpg;
-//        this.tankCapacity_gallons = tankCapacity_gallons;
 
     }
 
-//    public int distanceTraveledOnFullTank(){
-//        return hwy_mpg * tankCapacity_gallons;
-//    }
-
-    public double costOfGas(double priceOfGas, int totalDistance_miles){
-        return priceOfGas/(hwy_mpg/totalDistance_miles);
+    public int costOfGas(double priceOfGas, long totalDistance_meters){
+        double metersToMilesConversion = 1609.344;
+        double miles = ((double) totalDistance_meters/metersToMilesConversion);
+        Log.d("GAS COST", miles + "");
+        double gallonsUsed = miles/((double) hwy_mpg);
+        double costOfGas = gallonsUsed * priceOfGas;
+        int approximateCostOfGas = (int) costOfGas;
+        return approximateCostOfGas;
     }
 
     public int getId() {
@@ -170,13 +169,5 @@ public class Car implements Serializable {
     public void setHwy_mpg(int hwy_mpg) {
         this.hwy_mpg = hwy_mpg;
     }
-
-//        public int getTankCapacity_gallons() {
-//        return tankCapacity_gallons;
-//    }
-
-//    public void setTankCapacity_gallons(int tankCapacity_gallons) {
-//        this.tankCapacity_gallons = tankCapacity_gallons;
-//    }
 
 }
