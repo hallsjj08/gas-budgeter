@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -275,7 +276,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     }
 
     @Override
-    public void onPostExecute(LatLngBounds routeBounds, PolylineOptions routeOverview, String miles, String travelTime, long meters) {
+    public void onSuccessPostExecute(LatLngBounds routeBounds, PolylineOptions routeOverview, String miles, String travelTime, long meters) {
         bottomSheetAdapter.setDistance(meters);
         recyclerView.setAdapter(bottomSheetAdapter);
 
@@ -299,5 +300,28 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         bDirections.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
 
+    }
+
+    @Override
+    public void onErrorPostExecute(String status, String errorMessage) {
+//        Toast.makeText(getActivity(), status + ", " + errorMessage, Toast.LENGTH_LONG).show();
+        assert getView() != null;
+
+        placesBottomSheetBehavior.setHideable(true);
+        placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        tvPlace.setVisibility(View.VISIBLE);
+        bDirections.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        switch (status){
+            case "ZERO_RESULTS":
+                Snackbar.make(getView(), "We're sorry, no directions were found. Please select another location.", Snackbar.LENGTH_LONG).show();
+                break;
+            default:
+                Snackbar.make(getView(), "We're sorry. Something went wrong. Please select another location.", Snackbar.LENGTH_LONG).show();
+                break;
+        }
     }
 }
