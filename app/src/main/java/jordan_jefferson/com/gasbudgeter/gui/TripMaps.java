@@ -17,10 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,14 +44,14 @@ import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
+import jordan_jefferson.com.gasbudgeter.data.GoogleDirectionsRepository;
 import jordan_jefferson.com.gasbudgeter.data_adapters.BottomSheetAdapter;
-import jordan_jefferson.com.gasbudgeter.interface_files.AsyncResponse;
-import jordan_jefferson.com.gasbudgeter.network.GoogleDirectionsRetrofitBuilder;
 import jordan_jefferson.com.gasbudgeter.view_model.Garage;
+import jordan_jefferson.com.gasbudgeter.view_model.GoogleDirections;
 
 
 public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelectionListener,
-        AsyncResponse {
+        GoogleDirectionsRepository.DirectionsAsyncResponseCallbacks {
 
     private static final String TAG = "TripMapsFragment";
     private static final float DEFAULT_ZOOM = 15f;
@@ -60,10 +60,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
     //private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Decatur,IL&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
     private static final String API_KEY = "key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw";
-    private static final String BASE_URL = "https://maps.googleapis.com/maps/api/directions/json?";
+    private static final String FORMAT = "json?";
     private String origin;
     private String destination;
-    private String[] directionsUrl = new String[1];
+    private String directionsUrl;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -72,9 +72,12 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private BottomSheetAdapter bottomSheetAdapter;
     private SupportMapFragment mapFragment;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
+    private GoogleDirections directionsViewModel;
 
     private BottomSheetBehavior placesBottomSheetBehavior;
     private TextView tvPlace;
+    private Button bDirections;
+    private ProgressBar progressBar;
 
     public TripMaps() {
         // Required empty public constructor
@@ -101,10 +104,13 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        GoogleDirectionsRepository.callbacks = this;
+
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
 
         tvPlace = view.findViewById(R.id.place_name);
-        Button bDirections = view.findViewById(R.id.directions);
+        bDirections = view.findViewById(R.id.directions);
+        progressBar = view.findViewById(R.id.pbDirectionsLoading);
         ViewTreeObserver vto = view.getViewTreeObserver();
 
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -157,11 +163,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             @Override
             public void onClick(View v) {
                 origin = "origin=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
-                directionsUrl[0] = BASE_URL + origin + "&" + destination + "&" + API_KEY;
-                Log.d(TAG, directionsUrl[0]);
-                GoogleDirectionsRetrofitBuilder googleDirectionsRetrofitBuilder = new GoogleDirectionsRetrofitBuilder();
-                googleDirectionsRetrofitBuilder.delegate = TripMaps.this;
-                googleDirectionsRetrofitBuilder.execute(directionsUrl);
+                directionsUrl = FORMAT + origin + "&" + destination + "&" + API_KEY;
+                Log.d(TAG, directionsUrl);
+                directionsViewModel = ViewModelProviders.of(TripMaps.this).get(GoogleDirections.class);
+                directionsViewModel.fetchDirections(directionsUrl);
             }
         });
 
@@ -250,10 +255,27 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         Log.d(TAG, status.getStatusMessage());
     }
 
-    @Override
-    public void onDirectionResultsUpdate(LatLngBounds routeBounds, PolylineOptions routeOverview,
-                                         String miles, String travelTime, long meters) {
+    private void resizeMap(Fragment fragment, int width, int height){
+        if(fragment != null){
+            View view = fragment.getView();
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+            if(view != null){
+                view.setLayoutParams(layoutParams);
+                view.invalidate();
+                view.requestLayout();
+            }
+        }
+    }
 
+    @Override
+    public void onPreExecute() {
+        tvPlace.setVisibility(View.INVISIBLE);
+        bDirections.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onPostExecute(LatLngBounds routeBounds, PolylineOptions routeOverview, String miles, String travelTime, long meters) {
         bottomSheetAdapter.setDistance(meters);
         recyclerView.setAdapter(bottomSheetAdapter);
 
@@ -267,23 +289,15 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             }
         });
 
-            mMap.addPolyline(routeOverview);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
+        mMap.addPolyline(routeOverview);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
 
-            String travelInfo = travelTime + " : " + miles;
-            tvPlace.setText(travelInfo);
+        String travelInfo = travelTime + " : " + miles;
+        tvPlace.setText(travelInfo);
 
-    }
+        tvPlace.setVisibility(View.VISIBLE);
+        bDirections.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
 
-    private void resizeMap(Fragment fragment, int width, int height){
-        if(fragment != null){
-            View view = fragment.getView();
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-            if(view != null){
-                view.setLayoutParams(layoutParams);
-                view.invalidate();
-                view.requestLayout();
-            }
-        }
     }
 }
