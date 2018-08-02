@@ -216,7 +216,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     }
 
     private void updateCamera(LatLng latLng, float zoom, String title) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         mMap.clear();
 
         if(!title.equals("Current Location")){
@@ -291,7 +292,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         });
 
         mMap.addPolyline(routeOverview);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
 
         String travelInfo = travelTime + " : " + miles;
         tvPlace.setText(travelInfo);
