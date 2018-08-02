@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -57,7 +58,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
     private int fragmentHeight;
 
-    private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Decatur,IL&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
+    //private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Decatur,IL&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
     private static final String API_KEY = "key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw";
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/directions/json?";
     private String origin;
@@ -67,14 +68,12 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastKnownLocation;
-    private Garage viewModel;
     private RecyclerView recyclerView;
     private BottomSheetAdapter bottomSheetAdapter;
-    private Fragment mapFragment;
+    private SupportMapFragment mapFragment;
+    private SupportPlaceAutocompleteFragment autocompleteFragment;
 
-    private ConstraintLayout placeSelectedBottomSheet;
     private BottomSheetBehavior placesBottomSheetBehavior;
-
     private TextView tvPlace;
 
     public TripMaps() {
@@ -83,10 +82,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     }
 
     public static TripMaps newInstance() {
-        TripMaps fragment = new TripMaps();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        TripMaps fragment = new TripMaps();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new TripMaps();
     }
 
     @Override
@@ -104,7 +103,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
 
+        tvPlace = view.findViewById(R.id.place_name);
+        Button bDirections = view.findViewById(R.id.directions);
         ViewTreeObserver vto = view.getViewTreeObserver();
+
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -118,21 +120,22 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         recyclerView = view.findViewById(R.id.bottom_sheet_recyclerView);
         bottomSheetAdapter = new BottomSheetAdapter(getContext());
 
-        placeSelectedBottomSheet = view.findViewById(R.id.place_selected_bottom_sheet);
+        ConstraintLayout placeSelectedBottomSheet = view.findViewById(R.id.place_selected_bottom_sheet);
         placesBottomSheetBehavior = BottomSheetBehavior.from(placeSelectedBottomSheet);
         placesBottomSheetBehavior.setHideable(true);
         placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.tripMap);
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.tripMap);
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
 
-        final SupportPlaceAutocompleteFragment autocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager()
+        autocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager()
                 .findFragmentById(R.id.trip_place_autocomplete_fragment);
 
         autocompleteFragment.setOnPlaceSelectedListener(this);
 
+        assert autocompleteFragment.getView() != null;
         autocompleteFragment.getView().findViewById(R.id.place_autocomplete_clear_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -149,9 +152,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                         }
                     }
                 });
-
-        tvPlace = view.findViewById(R.id.place_name);
-        Button bDirections = view.findViewById(R.id.directions);
 
         bDirections.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,7 +222,14 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
     @Override
     public void onPlaceSelected(Place place) {
-        String placeName = place.getName().toString() + place.getAddress().toString();
+        String placeName;
+
+        if(place.getAddress() != null){
+            placeName = place.getAddress().toString();
+        }else {
+            placeName = place.getName().toString();
+        }
+
         tvPlace.setText(placeName);
         updateCamera(place.getLatLng(), DEFAULT_ZOOM, placeName);
         if(place.getId() != null){
@@ -234,7 +241,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
         placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         placesBottomSheetBehavior.setHideable(false);
-        mapFragment = getChildFragmentManager().findFragmentById(R.id.tripMap);
         resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
     }
 
@@ -251,7 +257,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         bottomSheetAdapter.setDistance(meters);
         recyclerView.setAdapter(bottomSheetAdapter);
 
-        viewModel = ViewModelProviders.of(this).get(Garage.class);
+        Garage viewModel = ViewModelProviders.of(this).get(Garage.class);
         viewModel.getCars().observe(this, new Observer<List<Car>>() {
             @Override
             public void onChanged(@Nullable List<Car> cars) {
@@ -273,9 +279,11 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         if(fragment != null){
             View view = fragment.getView();
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-            view.setLayoutParams(layoutParams);
-            view.invalidate();
-            view.requestLayout();
+            if(view != null){
+                view.setLayoutParams(layoutParams);
+                view.invalidate();
+                view.requestLayout();
+            }
         }
     }
 }
