@@ -80,15 +80,20 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private Button bDirections;
     private ProgressBar progressBar;
 
+    private MarkerOptions options;
+    private PolylineOptions routeOverview;
+    private LatLngBounds routeBounds;
+
     public TripMaps() {
         // Required empty public constructor
         setRetainInstance(true);
     }
 
     public static TripMaps newInstance() {
-//        TripMaps fragment = new TripMaps();
-//        Bundle args = new Bundle();
-//        fragment.setArguments(args);
+        TripMaps fragment = new TripMaps();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        Log.d(TAG, "New Instance.");
         return new TripMaps();
     }
 
@@ -149,7 +154,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     public void onClick(View v) {
                         autocompleteFragment.setText("");
                         if(mMap != null){
-                            mMap.clear();
+                            clearMap();
+                            Log.d(TAG, "Map Cleared, Place Cleared.");
                         }
                         if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
                                 || placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
@@ -196,7 +202,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setIndoorEnabled(false);
-        getDeviceLocation();
+
+        repopulateMap();
+
+        //getDeviceLocation();
         Log.d(TAG, "Map Ready");
     }
 
@@ -210,6 +219,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     lastKnownLocation = location;
                     LatLng latLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                     updateCamera(latLng, DEFAULT_ZOOM, "Current Location");
+                    Log.d(TAG, "Device Found.");
                 }
             }
         });
@@ -218,10 +228,11 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private void updateCamera(LatLng latLng, float zoom, String title) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-        mMap.clear();
+//        mMap.clear();
+        Log.d(TAG, "Map Cleared, Camera Updated.");
 
         if(!title.equals("Current Location")){
-            MarkerOptions options = new MarkerOptions().position(latLng).title(title);
+            this.options = new MarkerOptions().position(latLng).title(title);
             mMap.addMarker(options);
         }
 
@@ -236,6 +247,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         }else {
             placeName = place.getName().toString();
         }
+
+        Log.d(TAG, "Map Cleared, Place Selected");
 
         tvPlace.setText(placeName);
         updateCamera(place.getLatLng(), DEFAULT_ZOOM, placeName);
@@ -265,6 +278,9 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                 view.setLayoutParams(layoutParams);
                 view.invalidate();
                 view.requestLayout();
+                Log.d(TAG, "Map resized");
+            }else{
+                Log.d(TAG, "View is null");
             }
         }
     }
@@ -291,6 +307,9 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             }
         });
 
+        this.routeBounds = routeBounds;
+        this.routeOverview = routeOverview;
+
         mMap.addPolyline(routeOverview);
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
 
@@ -301,6 +320,35 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         bDirections.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(routeOverview != null || options != null){
+            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
+        }
+    }
+
+    private void repopulateMap(){
+        if(mMap != null && routeOverview != null){
+            mMap.addMarker(options);
+            mMap.addPolyline(routeOverview);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
+//            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
+        }else if(mMap != null && options != null){
+            mMap.addMarker(options);
+//            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
+        }
+
+        Log.d(TAG, "height: " + fragmentHeight);
+    }
+
+    private void clearMap(){
+        mMap.clear();
+        this.options = null;
+        this.routeOverview = null;
+        this.routeBounds = null;
     }
 
     @Override
