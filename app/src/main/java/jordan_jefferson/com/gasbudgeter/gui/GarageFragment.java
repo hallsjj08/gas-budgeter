@@ -1,6 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,8 @@ public class GarageFragment extends Fragment implements OnClickCarData {
 
     private CarListAdapter carListAdapter;
     private Garage viewModel;
+    private ViewStub newCarStub;
+    private View inflatedNewCarStub;
 
     private FragmentTransaction fragmentTransaction;
 
@@ -66,16 +70,15 @@ public class GarageFragment extends Fragment implements OnClickCarData {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.garage_fragment, container, false);
 
-        FloatingActionButton fab = view.findViewById(R.id.fab_add);
+        newCarStub = view.findViewById(R.id.new_car_stub);
 
+        FloatingActionButton fab = view.findViewById(R.id.fab_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assert getActivity() != null;
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, NewCarFragment.newInstance(GarageFragment.this))
-                        .addToBackStack(null)
-                        .commit();
+                Log.d(TAG, "Add Car Button Clicked.");
+                Intent intent = new Intent(getActivity(), NewCarActivity.class);
+                startActivityForResult(intent, 9001);
             }
         });
 
@@ -91,14 +94,17 @@ public class GarageFragment extends Fragment implements OnClickCarData {
                 assert cars != null;
                 if(cars.isEmpty()){
                     Log.d(TAG, "Garage is empty.");
-                    assert getActivity() != null;
-                    fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, NewCarFragment.newInstance(GarageFragment.this));
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    if(inflatedNewCarStub == null){
+                        inflatedNewCarStub = newCarStub.inflate();
+                    }
+                    inflatedNewCarStub.setVisibility(View.VISIBLE);
                 }else{
-                    carListAdapter.setCars(cars);
+                    if(inflatedNewCarStub != null){
+                        inflatedNewCarStub.setVisibility(View.INVISIBLE);
+                    }
                 }
+
+                carListAdapter.setCars(cars);
 
             }
         });
@@ -108,12 +114,6 @@ public class GarageFragment extends Fragment implements OnClickCarData {
         recyclerView.setAdapter(carListAdapter);
 
         return view;
-    }
-
-    @Override
-    public void onCarResultOk(Car car) {
-        viewModel.insert(car);
-        Log.d(TAG, "Car added to garage");
     }
 
     @Override
@@ -134,12 +134,20 @@ public class GarageFragment extends Fragment implements OnClickCarData {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
+            case 9001:
+                if(resultCode == Activity.RESULT_OK){
+                    Car car = (Car) data.getSerializableExtra(NewCarActivity.NEW_CAR_KEY);
+                    Log.d(TAG, car.getMake());
+                    viewModel.insert(car);
+                }
+                break;
             case 9002:
                 switch (resultCode){
                     case EditCarFragment.RESULT_DELETE:
                         viewModel.delete((Car) data.getSerializableExtra(EDIT_CAR_EXTRA));
                         break;
                 }
+                break;
         }
     }
 

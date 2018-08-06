@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight">
 
+    <ViewStub
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/fragment_new_car"
+        android:id="@+id/new_car_stub"
+        android:inflatedId="@+id/new_car_inflated_stub"
+        android:visibility="visible"/>
+
     <include layout="@layout/fragment_recycler_view"/>
 
     <android.support.design.widget.FloatingActionButton

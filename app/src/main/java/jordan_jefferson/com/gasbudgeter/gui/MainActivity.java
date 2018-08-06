@@ -1,5 +1,6 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment garageFragment;
     private Fragment tripMapsFragment;
     private Fragment aboutFragment;
+    private Fragment currentFragment;
     private BottomNavigationView navigation;
 
     private static final String MAP_FRAG_TAG = "Trip_Maps_Fragment";
@@ -23,14 +25,17 @@ public class MainActivity extends AppCompatActivity {
     private static final String ABOUT_FRAG_TAG = "About_Fragment";
     private static final String SELECTED_ITEM_KEY = "Selected_Item";
 
-    private int fragContainer;
+    private int mapContainer;
+    private int garageContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "Activity Created");
 
-        fragContainer = R.id.fragment_container;
+        mapContainer = R.id.map_container;
+        garageContainer = R.id.garage_container;
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -38,15 +43,11 @@ public class MainActivity extends AppCompatActivity {
         int currentSelection;
         if(savedInstanceState == null){
             currentSelection = R.id.navigation_destination;
-            tripMapsFragment = TripMaps.newInstance();
-            garageFragment = GarageFragment.newInstance();
-
         }else{
             currentSelection = savedInstanceState.getInt(SELECTED_ITEM_KEY);
             tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
             garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
         }
-
         navigation.setSelectedItemId(currentSelection);
     }
 
@@ -59,16 +60,24 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_destination:
                     if(tripMapsFragment == null){
                         tripMapsFragment = TripMaps.newInstance();
+                        getSupportFragmentManager().beginTransaction()
+                                .add(mapContainer, tripMapsFragment, MAP_FRAG_TAG)
+                                .commit();
+                        currentFragment = tripMapsFragment;
+                    }else{
+                        swapFragments(tripMapsFragment);
                     }
-                    swapFragments(tripMapsFragment, MAP_FRAG_TAG);
-                    tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
                     return true;
                 case R.id.navigation_garage:
                     if(garageFragment == null){
                         garageFragment = GarageFragment.newInstance();
+                        getSupportFragmentManager().beginTransaction()
+                                .add(garageContainer, garageFragment, GARAGE_FRAG_TAG)
+                                .commit();
+                        currentFragment = garageFragment;
+                    }else{
+                        swapFragments(garageFragment);
                     }
-                    swapFragments(garageFragment, GARAGE_FRAG_TAG);
-                    garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
                     return true;
                 case R.id.navigation_about:
 
@@ -78,16 +87,27 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void swapFragments(Fragment fragment, String tag){
+    private void swapFragments(Fragment fragment){
         getSupportFragmentManager().beginTransaction()
-                .replace(fragContainer, fragment, tag)
+                .hide(currentFragment)
+                .show(fragment)
                 .commit();
-        getSupportFragmentManager().executePendingTransactions();
+        currentFragment = fragment;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_ITEM_KEY, navigation.getSelectedItemId());
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Log.d(TAG, "Landscape");
+        }else {
+            Log.d(TAG, "Portrait");
+        }
     }
 }

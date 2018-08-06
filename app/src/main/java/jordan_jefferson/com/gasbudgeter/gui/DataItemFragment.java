@@ -64,6 +64,7 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
 
         RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
         

@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,19 +53,23 @@ import jordan_jefferson.com.gasbudgeter.view_model.GoogleDirections;
 
 
 public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelectionListener,
-        GoogleDirectionsRepository.DirectionsAsyncResponseCallbacks {
+        GoogleDirectionsRepository.DirectionsAsyncResponseCallbacks, ViewTreeObserver.OnGlobalLayoutListener {
 
-    private static final String TAG = "TripMapsFragment";
     private static final float DEFAULT_ZOOM = 15f;
-
     private int fragmentHeight;
 
     //private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Decatur,IL&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
+    private static final String TAG = "TripMapsFragment";
     private static final String API_KEY = "key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw";
     private static final String FORMAT = "json?";
+    private static final String PLACE = "Place Selected";
+    private static final String ROUTE_OVERVIEW = "Directions";
+    private static final String DEVICE_LOCATION = "User Location";
+    private String mapState;
     private String origin;
     private String destination;
     private String directionsUrl;
+    private String travelInfo;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -74,12 +79,15 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private SupportMapFragment mapFragment;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
     private GoogleDirections directionsViewModel;
+    private ViewTreeObserver vto;
 
     private BottomSheetBehavior placesBottomSheetBehavior;
     private TextView tvPlace;
     private Button bDirections;
     private ProgressBar progressBar;
+    private ImageButton autocompleteClearButton;
 
+    private Place place;
     private MarkerOptions options;
     private PolylineOptions routeOverview;
     private LatLngBounds routeBounds;
@@ -114,28 +122,22 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
 
+
         tvPlace = view.findViewById(R.id.place_name);
         bDirections = view.findViewById(R.id.directions);
         progressBar = view.findViewById(R.id.pbDirectionsLoading);
-        ViewTreeObserver vto = view.getViewTreeObserver();
 
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if(getView() != null){
-                    fragmentHeight = getView().getMeasuredHeight();
-                    Log.d(TAG, "Measure Height: " + fragmentHeight);
-                }
-            }
-        });
+        vto = view.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(this);
 
         recyclerView = view.findViewById(R.id.bottom_sheet_recyclerView);
         bottomSheetAdapter = new BottomSheetAdapter(getContext());
 
         ConstraintLayout placeSelectedBottomSheet = view.findViewById(R.id.place_selected_bottom_sheet);
         placesBottomSheetBehavior = BottomSheetBehavior.from(placeSelectedBottomSheet);
-        placesBottomSheetBehavior.setHideable(true);
-        placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        if(mapState == null){
+            setBottomSheetVisibility(false);
+        }
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.tripMap);
         mapFragment.getMapAsync(this);
@@ -148,8 +150,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         autocompleteFragment.setOnPlaceSelectedListener(this);
 
         assert autocompleteFragment.getView() != null;
-        autocompleteFragment.getView().findViewById(R.id.place_autocomplete_clear_button)
-                .setOnClickListener(new View.OnClickListener() {
+        autocompleteClearButton = autocompleteFragment.getView().findViewById(R.id.place_autocomplete_clear_button);
+        autocompleteClearButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         autocompleteFragment.setText("");
@@ -159,9 +161,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                         }
                         if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
                                 || placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
-                            placesBottomSheetBehavior.setHideable(true);
-                            placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                            setBottomSheetVisibility(false);
                         }
                     }
                 });
@@ -203,9 +203,13 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setIndoorEnabled(false);
 
-        repopulateMap();
+        if(mapState != null){
+            updateMap(mapState);
+        }else{
+            getDeviceLocation();
+        }
 
-        //getDeviceLocation();
+
         Log.d(TAG, "Map Ready");
     }
 
@@ -217,57 +221,83 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             public void onSuccess(Location location) {
                 if(location != null){
                     lastKnownLocation = location;
-                    LatLng latLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                    updateCamera(latLng, DEFAULT_ZOOM, "Current Location");
+                    mapState = DEVICE_LOCATION;
+                    updateMap(mapState);
                     Log.d(TAG, "Device Found.");
                 }
             }
         });
     }
 
-    private void updateCamera(LatLng latLng, float zoom, String title) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-//        mMap.clear();
-        Log.d(TAG, "Map Cleared, Camera Updated.");
+    private void updateMap(String cameraSetting) {
 
-        if(!title.equals("Current Location")){
-            this.options = new MarkerOptions().position(latLng).title(title);
-            mMap.addMarker(options);
+        if(options == null){
+            options = new MarkerOptions();
         }
 
+        switch(cameraSetting){
+
+            case PLACE:
+                setBottomSheetVisibility(true);
+                if(place.getAddress() != null){
+                    options.title(place.getAddress().toString());
+                    tvPlace.setText(place.getAddress().toString());
+                }else{
+                    options.title(place.getName().toString());
+                    tvPlace.setText(place.getName().toString());
+                }
+                options.position(place.getLatLng());
+                mMap.addMarker(options);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM));
+                break;
+
+            case ROUTE_OVERVIEW:
+                setBottomSheetVisibility(true);
+                mMap.addMarker(options);
+                mMap.addPolyline(routeOverview);
+                tvPlace.setText(travelInfo);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
+                break;
+
+            case DEVICE_LOCATION:
+                LatLng deviceLatLng = new LatLng(lastKnownLocation.getLatitude(), 
+                        lastKnownLocation.getLongitude());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(deviceLatLng, DEFAULT_ZOOM));
+                break;
+        }
     }
 
     @Override
     public void onPlaceSelected(Place place) {
-        String placeName;
+        mapState = PLACE;
+        this.place = place;
+        updateMap(mapState);
 
-        if(place.getAddress() != null){
-            placeName = place.getAddress().toString();
-        }else {
-            placeName = place.getName().toString();
-        }
-
-        Log.d(TAG, "Map Cleared, Place Selected");
-
-        tvPlace.setText(placeName);
-        updateCamera(place.getLatLng(), DEFAULT_ZOOM, placeName);
         if(place.getId() != null){
             Log.d(TAG, place.getId());
             destination = "destination=place_id:" + place.getId();
         }else{
             destination = "destination=" + place.getLatLng().latitude + "," + place.getLatLng().longitude;
         }
-
-        placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        placesBottomSheetBehavior.setHideable(false);
-        resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
     }
 
     @Override
     public void onError(Status status) {
         Toast.makeText(getActivity(), "Unfortunately there was an error locating your place.", Toast.LENGTH_SHORT).show();
         Log.d(TAG, status.getStatusMessage());
+    }
+
+    public void setBottomSheetVisibility(boolean isVisible){
+        if(isVisible){
+            placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            placesBottomSheetBehavior.setHideable(false);
+            autocompleteClearButton.setVisibility(View.VISIBLE);
+            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
+        }else{
+            placesBottomSheetBehavior.setHideable(true);
+            placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        }
     }
 
     private void resizeMap(Fragment fragment, int width, int height){
@@ -294,6 +324,12 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
     @Override
     public void onSuccessPostExecute(LatLngBounds routeBounds, PolylineOptions routeOverview, String miles, String travelTime, long meters) {
+        mapState = ROUTE_OVERVIEW;
+        this.routeBounds = routeBounds;
+        this.routeOverview = routeOverview;
+        travelInfo = travelTime + " : " + miles;
+        updateMap(mapState);
+
         bottomSheetAdapter.setDistance(meters);
         recyclerView.setAdapter(bottomSheetAdapter);
 
@@ -307,15 +343,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             }
         });
 
-        this.routeBounds = routeBounds;
-        this.routeOverview = routeOverview;
-
-        mMap.addPolyline(routeOverview);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
-
-        String travelInfo = travelTime + " : " + miles;
-        tvPlace.setText(travelInfo);
-
         tvPlace.setVisibility(View.VISIBLE);
         bDirections.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
@@ -325,23 +352,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     @Override
     public void onResume() {
         super.onResume();
-        if(routeOverview != null || options != null){
-            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
-        }
-    }
-
-    private void repopulateMap(){
-        if(mMap != null && routeOverview != null){
-            mMap.addMarker(options);
-            mMap.addPolyline(routeOverview);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 16));
-//            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
-        }else if(mMap != null && options != null){
-            mMap.addMarker(options);
-//            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
-        }
-
-        Log.d(TAG, "height: " + fragmentHeight);
     }
 
     private void clearMap(){
@@ -353,12 +363,9 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
     @Override
     public void onErrorPostExecute(String status, String errorMessage) {
-//        Toast.makeText(getActivity(), status + ", " + errorMessage, Toast.LENGTH_LONG).show();
         assert getView() != null;
 
-        placesBottomSheetBehavior.setHideable(true);
-        placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        setBottomSheetVisibility(false);
 
         tvPlace.setVisibility(View.VISIBLE);
         bDirections.setVisibility(View.VISIBLE);
@@ -371,6 +378,18 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             default:
                 Snackbar.make(getView(), "We're sorry. Something went wrong. Please select another location.", Snackbar.LENGTH_LONG).show();
                 break;
+        }
+    }
+
+    /**
+     * Callback method to be invoked when the global layout state or the visibility of views
+     * within the view tree changes
+     */
+    @Override
+    public void onGlobalLayout() {
+        if(getView() != null){
+            fragmentHeight = getView().getMeasuredHeight();
+            Log.d(TAG, "Measure Height: " + fragmentHeight);
         }
     }
 }

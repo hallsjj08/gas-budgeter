@@ -8,6 +8,4 @@ public interface OnClickCarData {
 
     void onClickViewCarSpecs(Car car);
 
-    void onCarResultOk(Car car);
-
 }
