@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "Activity Created");
@@ -42,13 +43,21 @@ public class MainActivity extends AppCompatActivity {
 
         int currentSelection;
         if(savedInstanceState == null){
-            currentSelection = R.id.navigation_destination;
+//            currentSelection = R.id.navigation_destination;
+            tripMapsFragment = TripMaps.newInstance();
+            garageFragment = GarageFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .add(garageContainer, garageFragment, GARAGE_FRAG_TAG)
+                    .add(mapContainer, tripMapsFragment, MAP_FRAG_TAG)
+                    .commit();
+            currentFragment = garageFragment;
+            swapFragments(tripMapsFragment);
         }else{
             currentSelection = savedInstanceState.getInt(SELECTED_ITEM_KEY);
             tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
             garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
+            navigation.setSelectedItemId(currentSelection);
         }
-        navigation.setSelectedItemId(currentSelection);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
