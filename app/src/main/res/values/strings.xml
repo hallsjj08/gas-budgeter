@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RoadTripPal</string>
+    <string name="app_name">Road Trip America</string>
     <string name="title_activity_car_list">CarListActivity</string>
     <string name="title_activity_test_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
