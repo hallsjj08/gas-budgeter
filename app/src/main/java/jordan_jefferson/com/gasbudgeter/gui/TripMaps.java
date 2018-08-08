@@ -325,6 +325,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     @Override
     public void onSuccessPostExecute(LatLngBounds routeBounds, PolylineOptions routeOverview, String miles, String travelTime, long meters) {
         mapState = ROUTE_OVERVIEW;
+        routeOverview.color(getResources().getColor(R.color.primaryDarkColor));
+        routeOverview.width(7f);
         this.routeBounds = routeBounds;
         this.routeOverview = routeOverview;
         travelInfo = travelTime + " : " + miles;

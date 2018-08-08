@@ -47,7 +47,7 @@
     android:paddingEnd="16dp"
     android:paddingStart="8dp"
     android:drawableStart="@android:drawable/ic_menu_directions"
-    android:background="@color/colorAccent"
+    android:background="@color/secondaryColor"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"/>
 

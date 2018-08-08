@@ -2,9 +2,14 @@ package jordan_jefferson.com.gasbudgeter.gui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,6 +86,8 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
         buttonMake.setText(params.get(1));
         buttonModel.setText(params.get(2));
         buttonType.setText(params.get(3));
+
+        removeVehicle.setPaintFlags(removeVehicle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         setClickListener(buttonYear, 0);
         setClickListener(buttonMake, 1);

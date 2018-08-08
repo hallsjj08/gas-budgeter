@@ -46,8 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:backgroundTint="#FFF"
-        app:tint="@color/colorAccent"
+        app:backgroundTint="@color/secondaryColor"
+        app:tint="@android:color/black"
         android:src="@android:drawable/ic_menu_mylocation" />
 
 </android.support.design.widget.CoordinatorLayout>

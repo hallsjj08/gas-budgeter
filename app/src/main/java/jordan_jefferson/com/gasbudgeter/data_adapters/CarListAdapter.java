@@ -37,7 +37,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
         ImageView imageView;
         TextView carText;
         TextView mpgData;
-        ImageButton editCarButton;
+        Button editCarButton;
         Button viewSpecsButton;
 
         private CarViewHolder(View itemView) {
@@ -48,7 +48,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
             carText = itemView.findViewById(R.id.myCarText);
             mpgData = itemView.findViewById(R.id.mpgData);
             editCarButton = itemView.findViewById(R.id.edit_car_button);
-            viewSpecsButton = itemView.findViewById(R.id.view_specs_button);
+//            viewSpecsButton = itemView.findViewById(R.id.view_specs_button);
 
         }
     }
@@ -83,7 +83,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
 
         onClickEditCar(holder, position);
 
-        onClickViewSpecs(holder, position);
+//        onClickViewSpecs(holder, position);
 
     }
 
@@ -96,14 +96,14 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
         });
     }
 
-    private void onClickViewSpecs(CarListAdapter.CarViewHolder holder, final int position){
-        holder.viewSpecsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickCarData.onClickViewCarSpecs(cars.get(position));
-            }
-        });
-    }
+//    private void onClickViewSpecs(CarListAdapter.CarViewHolder holder, final int position){
+//        holder.viewSpecsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onClickCarData.onClickViewCarSpecs(cars.get(position));
+//            }
+//        });
+//    }
 
     public void setCars(List<Car> cars){
         this.cars = cars;

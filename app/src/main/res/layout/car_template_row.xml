@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="348dp"
@@ -14,21 +16,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         card_view:cardBackgroundColor="@color/cardview_light_background"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardCornerRadius="4dp"
+        android:elevation="12dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/edit_car_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="16dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/edit_car_button"
-                card_view:srcCompat="@android:drawable/ic_menu_edit" />
 
             <ImageView
                 android:id="@+id/thumbnail"
@@ -41,7 +34,7 @@
                 android:padding="8dp"
                 android:scaleType="fitCenter"
                 android:background="@drawable/image_border_background"
-                android:src="@drawable/black_car_small"
+                android:src="@drawable/noun_sports_car"
                 android:transitionName="source" />
 
             <TextView
@@ -64,18 +57,17 @@
                 android:text="@string/test_city_mpg" />
 
             <Button
-                android:id="@+id/view_specs_button"
+                android:id="@+id/edit_car_button"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="16dp"
-                android:background="@color/colorAccent"
+                android:background="@color/secondaryColor"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:radius="2dp"
                 android:text="@string/view_specs"
-                android:textColor="#FFF"
                 android:textSize="18sp" />
 
         </RelativeLayout>

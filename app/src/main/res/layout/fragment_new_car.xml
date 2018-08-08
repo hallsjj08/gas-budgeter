@@ -12,7 +12,7 @@
         android:layout_above="@id/newCarText"
         android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_new_car_green_250dp"/>
+        android:src="@drawable/noun_sports_car"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,6 +21,7 @@
         android:layout_centerHorizontal="true"
         android:text="Add a car to see the approximate amount you'll pay in fuel cost to your destination."
         android:id="@+id/newCarText"
+        android:layout_margin="16dp"
         style="@style/text_style"/>
 
 </RelativeLayout>
