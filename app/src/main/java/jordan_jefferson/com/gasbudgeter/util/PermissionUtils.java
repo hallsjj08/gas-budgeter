@@ -1,5 +1,6 @@
 package jordan_jefferson.com.gasbudgeter.util;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -19,7 +20,8 @@ public class PermissionUtils {
     private NotificationManager mNotificationManager;
 
     //TODO: Add permissions needed to access Google Maps and Internet Use.
-    private String[] myPermissions = {};
+    private String[] myPermissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_NETWORK_STATE};
 
     PermissionUtils(Context context, Activity activity){
 

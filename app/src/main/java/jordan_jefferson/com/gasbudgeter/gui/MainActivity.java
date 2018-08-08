@@ -1,10 +1,15 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private int mapContainer;
     private int garageContainer;
 
+    private String[] myPermissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_NETWORK_STATE};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
@@ -41,22 +49,36 @@ public class MainActivity extends AppCompatActivity {
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        int currentSelection;
-        if(savedInstanceState == null){
-//            currentSelection = R.id.navigation_destination;
-            tripMapsFragment = TripMaps.newInstance();
-            garageFragment = GarageFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .add(garageContainer, garageFragment, GARAGE_FRAG_TAG)
-                    .add(mapContainer, tripMapsFragment, MAP_FRAG_TAG)
-                    .commit();
-            currentFragment = garageFragment;
-            swapFragments(tripMapsFragment);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            for(String permission : myPermissions){
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    Log.w(permission, "Requesting Permission");
+                    ActivityCompat.requestPermissions(this,
+                            myPermissions, 1);
+                } else {
+                    Log.w(permission, "Permission Already Granted");
+                }
+            }
         }else{
-            currentSelection = savedInstanceState.getInt(SELECTED_ITEM_KEY);
-            tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
-            garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
-            navigation.setSelectedItemId(currentSelection);
+            int currentSelection;
+            if(savedInstanceState == null){
+//            currentSelection = R.id.navigation_destination;
+                tripMapsFragment = TripMaps.newInstance();
+                garageFragment = GarageFragment.newInstance();
+                getSupportFragmentManager().beginTransaction()
+                        .add(garageContainer, garageFragment, GARAGE_FRAG_TAG)
+                        .add(mapContainer, tripMapsFragment, MAP_FRAG_TAG)
+                        .commit();
+                currentFragment = garageFragment;
+                swapFragments(tripMapsFragment);
+            }else{
+                currentSelection = savedInstanceState.getInt(SELECTED_ITEM_KEY);
+                tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
+                garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
+                navigation.setSelectedItemId(currentSelection);
+            }
+
         }
     }
 
@@ -118,5 +140,29 @@ public class MainActivity extends AppCompatActivity {
         }else {
             Log.d(TAG, "Portrait");
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Permissions Granted");
+                        tripMapsFragment = TripMaps.newInstance();
+                        garageFragment = GarageFragment.newInstance();
+                        getSupportFragmentManager().beginTransaction()
+                                .add(garageContainer, garageFragment, GARAGE_FRAG_TAG)
+                                .add(mapContainer, tripMapsFragment, MAP_FRAG_TAG)
+                                .commit();
+                        currentFragment = garageFragment;
+                        swapFragments(tripMapsFragment);
+                }else{
+                    Log.d(TAG, "Permissions Denied");
+                    finish();
+                }
+        }
+
     }
 }
