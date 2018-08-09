@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int mapContainer;
     private int garageContainer;
+    private int aboutContainer;
 
     private String[] myPermissions = {Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_NETWORK_STATE};
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         mapContainer = R.id.map_container;
         garageContainer = R.id.garage_container;
+        aboutContainer = R.id.about_container;
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -63,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             int currentSelection;
             if(savedInstanceState == null){
-//            currentSelection = R.id.navigation_destination;
                 tripMapsFragment = TripMaps.newInstance();
                 garageFragment = GarageFragment.newInstance();
                 getSupportFragmentManager().beginTransaction()
@@ -111,7 +112,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 case R.id.navigation_about:
-
+                    if(aboutFragment == null){
+                        aboutFragment = AboutFragment.newInstance();
+                        getSupportFragmentManager().beginTransaction()
+                                .add(aboutContainer, aboutFragment, ABOUT_FRAG_TAG)
+                                .commit();
+                        currentFragment = aboutFragment;
+                    }else{
+                        swapFragments(aboutFragment);
+                    }
                     return true;
             }
             return false;
