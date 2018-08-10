@@ -88,6 +88,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private ImageButton autocompleteClearButton;
 
     private Place place;
+    private boolean hasPlaceChanged;
     private MarkerOptions options;
     private PolylineOptions routeOverview;
     private LatLngBounds routeBounds;
@@ -169,11 +170,18 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         bDirections.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                origin = "origin=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
-                directionsUrl = FORMAT + origin + "&" + destination + "&" + API_KEY;
-                Log.d(TAG, directionsUrl);
-                directionsViewModel = ViewModelProviders.of(TripMaps.this).get(GoogleDirections.class);
-                directionsViewModel.fetchDirections(directionsUrl);
+
+                if(hasPlaceChanged){
+                    origin = "origin=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
+                    directionsUrl = FORMAT + origin + "&" + destination + "&" + API_KEY;
+                    Log.d(TAG, directionsUrl);
+                    directionsViewModel = ViewModelProviders.of(TripMaps.this).get(GoogleDirections.class);
+                    directionsViewModel.fetchDirections(directionsUrl);
+                    hasPlaceChanged = false;
+                }else{
+                    updateMap(mapState);
+                }
+
             }
         });
 
@@ -221,8 +229,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             public void onSuccess(Location location) {
                 if(location != null){
                     lastKnownLocation = location;
-                    mapState = DEVICE_LOCATION;
-                    updateMap(mapState);
+                    updateMap(DEVICE_LOCATION);
                     Log.d(TAG, "Device Found.");
                 }
             }
@@ -279,6 +286,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         }else{
             destination = "destination=" + place.getLatLng().latitude + "," + place.getLatLng().longitude;
         }
+
+        hasPlaceChanged = true;
     }
 
     @Override
