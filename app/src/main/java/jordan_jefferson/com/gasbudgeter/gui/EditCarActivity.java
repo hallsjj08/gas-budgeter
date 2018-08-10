@@ -1,9 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import java.util.ArrayList;
+import android.support.v7.app.AppCompatActivity;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;

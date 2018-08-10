@@ -3,24 +3,30 @@ package jordan_jefferson.com.gasbudgeter.gui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.Button;
+import android.widget.TextView;
 
 import jordan_jefferson.com.gasbudgeter.R;
-import jordan_jefferson.com.gasbudgeter.data.AboutContent;
-import jordan_jefferson.com.gasbudgeter.data_adapters.AboutContentAdapter;
 
 
 public class AboutFragment extends Fragment {
 
-    private ArrayList<AboutContent> aboutContents;
+    private View bottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
+
+    private Button bAbout;
+    private Button bFeatures;
+    private Button bLicense;
+    private Button bEpaNotices;
+    private Button bPrivacy;
+
+    private TextView title;
+    private TextView description;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -41,18 +47,60 @@ public class AboutFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_about, container, false);
 
-        this.aboutContents = new ArrayList<>();
+        bottomSheet = view.findViewById(R.id.about_bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setHideable(true);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        for(int i = 0; i<10; i++){
-            aboutContents.add(new AboutContent("title " + i, "description " + i));
-        }
+        title = view.findViewById(R.id.title);
+        description = view.findViewById(R.id.description);
 
-        RecyclerView recyclerView = view.findViewById(R.id.about_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        AboutContentAdapter aboutContentAdapter = new AboutContentAdapter(aboutContents, getContext());
-        recyclerView.setAdapter(aboutContentAdapter);
+        bAbout = view.findViewById(R.id.about);
+        bFeatures = view.findViewById(R.id.features);
+        bLicense = view.findViewById(R.id.licenses);
+        bEpaNotices = view.findViewById(R.id.notices);
+        bPrivacy = view.findViewById(R.id.privacy);
+
+        onButtonClick(bAbout);
+        onButtonClick(bFeatures);
+        onButtonClick(bLicense);
+        onButtonClick(bEpaNotices);
+        onButtonClick(bPrivacy);
 
         return view;
+    }
+
+    private void onButtonClick(Button button){
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED ||
+                        bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+
+                if(v.getId() == bAbout.getId()){
+                    title.setText(bAbout.getText());
+                    description.setText(getResources().getString(R.string.about_the_app));
+                }else if(v.getId() == bFeatures.getId()) {
+                    title.setText(bFeatures.getText());
+                    description.setText(getResources().getString(R.string.upcoming_features));
+                }else if(v.getId() == bLicense.getId()) {
+                    title.setText(bLicense.getText());
+                    description.setText(getResources().getString(R.string.licenses_agreements));
+                }else if(v.getId() == bEpaNotices.getId()) {
+                    title.setText(bEpaNotices.getText());
+                    description.setText(getResources().getString(R.string.epa_notices));
+                }else if(v.getId() == bPrivacy.getId()) {
+                    title.setText(bPrivacy.getText());
+                    description.setText(getResources().getString(R.string.privacy));
+                }
+
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
     }
 
 }
