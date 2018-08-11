@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +73,10 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
         }
 
 
-        Button buttonYear = view.findViewById(R.id.buttonYear);
-        Button buttonMake = view.findViewById(R.id.buttonMake);
-        Button buttonModel = view.findViewById(R.id.buttonModel);
-        Button buttonType = view.findViewById(R.id.buttonType);
+        TextView buttonYear = view.findViewById(R.id.buttonYear);
+        TextView buttonMake = view.findViewById(R.id.buttonMake);
+        TextView buttonModel = view.findViewById(R.id.buttonModel);
+        TextView buttonType = view.findViewById(R.id.buttonType);
         Button removeVehicle = view.findViewById(R.id.remove_car_button);
 
         buttonYear.setText(params.get(0));
@@ -85,10 +86,10 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
 
         removeVehicle.setPaintFlags(removeVehicle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        setClickListener(buttonYear, 0);
-        setClickListener(buttonMake, 1);
-        setClickListener(buttonModel, 2);
-        setClickListener(buttonType, 3);
+//        setClickListener(buttonYear, 0);
+//        setClickListener(buttonMake, 1);
+//        setClickListener(buttonModel, 2);
+//        setClickListener(buttonType, 3);
 
         removeVehicle.setOnClickListener(new View.OnClickListener() {
             @Override

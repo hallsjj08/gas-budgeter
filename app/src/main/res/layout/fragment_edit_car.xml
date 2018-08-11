@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +21,7 @@
         android:src="@drawable/noun_sports_car"
         android:transitionName="editCarDestination" />
 
-    <Button
+    <TextView
         android:id="@+id/buttonYear"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -30,9 +31,7 @@
         android:background="@android:color/transparent"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:drawableEnd="@drawable/down_arrow"
         android:textStyle="normal"
-        android:drawablePadding="8dp"
         android:gravity="end|center_vertical" />
 
     <TextView
@@ -48,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/editCarYear"/>
 
-    <Button
+    <TextView
         android:id="@+id/buttonMake"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -57,8 +56,6 @@
         android:background="@android:color/transparent"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:drawableEnd="@drawable/down_arrow"
-        android:drawablePadding="8dp"
         android:gravity="end|center_vertical" />
 
     <TextView
@@ -71,7 +68,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/editCarMake"/>
 
-    <Button
+    <TextView
         android:id="@+id/buttonModel"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -80,8 +77,6 @@
         android:background="@android:color/transparent"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:drawableEnd="@drawable/down_arrow"
-        android:drawablePadding="8dp"
         android:gravity="end|center_vertical" />
 
     <TextView
@@ -94,7 +89,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/editCarModel"/>
 
-    <Button
+    <TextView
         android:id="@+id/buttonType"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -103,8 +98,6 @@
         android:background="@android:color/transparent"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:drawableEnd="@drawable/down_arrow"
-        android:drawablePadding="8dp"
         android:gravity="end|center_vertical" />
 
     <TextView

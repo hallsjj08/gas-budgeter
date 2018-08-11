@@ -4,6 +4,7 @@ package jordan_jefferson.com.gasbudgeter.gui;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -131,7 +132,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
         tvPlace = view.findViewById(R.id.place_name);
         tvPlaceTitle = view.findViewById(R.id.place_title);
-        bDirections = view.findViewById(R.id.directions);
+        bDirections = view.findViewById(R.id.start);
         progressBar = view.findViewById(R.id.pbDirectionsLoading);
 
         recyclerView = view.findViewById(R.id.bottom_sheet_recyclerView);
@@ -150,22 +151,13 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
-                View view = mapFragment.getView();
+                View mapView = mapFragment.getView();
 
                 if(newState == BottomSheetBehavior.STATE_EXPANDED){
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            view.getMeasuredHeight() - 156);
-                    view.setLayoutParams(layoutParams);
-                    view.invalidate();
-                    view.requestLayout();
+                    resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT,
+                            mapView.getMeasuredHeight() - bottomSheet.getMeasuredHeight());
                 }else if(newState == BottomSheetBehavior.STATE_HIDDEN){
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT);
-                    view.setLayoutParams(layoutParams);
-                    view.invalidate();
-                    view.requestLayout();
+                    resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 }
 
                 Log.d(TAG, "Map Resized");
@@ -402,5 +394,27 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                 Snackbar.make(getView(), "We're sorry. Something went wrong. Please select another location.", Snackbar.LENGTH_LONG).show();
                 break;
         }
+    }
+
+    private void resizeMap(@NonNull View mapView, int width, int height){
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        mapView.setLayoutParams(layoutParams);
+        mapView.invalidate();
+        mapView.requestLayout();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        View mapView = mapFragment.getView();
+
+        if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT,
+                    mapView.getMeasuredHeight() - 156);
+        }else if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN){
+            resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        }
+
+        Log.d(TAG, "Map Resized");
     }
 }
