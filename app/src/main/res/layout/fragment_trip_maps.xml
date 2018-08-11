@@ -38,6 +38,16 @@
         </fragment>
     </LinearLayout>
 
+    <ViewStub
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout="@layout/place_stub"
+        android:id="@+id/place_stub"
+        android:inflatedId="@+id/place_inflated_stub"
+        android:layout_gravity="bottom"
+        android:visibility="gone"/>
+
     <include layout="@layout/place_selected_bottom_sheet"/>
 
     <android.support.design.widget.FloatingActionButton

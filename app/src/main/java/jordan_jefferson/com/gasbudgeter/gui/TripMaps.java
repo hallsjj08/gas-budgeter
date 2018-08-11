@@ -18,7 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -53,10 +53,9 @@ import jordan_jefferson.com.gasbudgeter.view_model.GoogleDirections;
 
 
 public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelectionListener,
-        GoogleDirectionsRepository.DirectionsAsyncResponseCallbacks, ViewTreeObserver.OnGlobalLayoutListener {
+        GoogleDirectionsRepository.DirectionsAsyncResponseCallbacks {
 
     private static final float DEFAULT_ZOOM = 15f;
-    private int fragmentHeight;
 
     //private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Decatur,IL&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
     private static final String TAG = "TripMapsFragment";
@@ -79,10 +78,12 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private SupportMapFragment mapFragment;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
     private GoogleDirections directionsViewModel;
-    private ViewTreeObserver vto;
+    private ViewStub viewStub;
+    private View inflatedStub;
 
     private BottomSheetBehavior placesBottomSheetBehavior;
     private TextView tvPlace;
+    private TextView tvPlaceTitle;
     private Button bDirections;
     private ProgressBar progressBar;
     private ImageButton autocompleteClearButton;
@@ -122,14 +123,16 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         GoogleDirectionsRepository.callbacks = this;
 
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
+        viewStub = view.findViewById(R.id.place_stub);
+        inflatedStub = viewStub.inflate();
+        viewStub.setVisibility(View.GONE);
 
+        Button directions = view.findViewById(R.id.place_directions);
 
         tvPlace = view.findViewById(R.id.place_name);
+        tvPlaceTitle = view.findViewById(R.id.place_title);
         bDirections = view.findViewById(R.id.directions);
         progressBar = view.findViewById(R.id.pbDirectionsLoading);
-
-        vto = view.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(this);
 
         recyclerView = view.findViewById(R.id.bottom_sheet_recyclerView);
         bottomSheetAdapter = new BottomSheetAdapter(getContext());
@@ -142,6 +145,37 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.tripMap);
         mapFragment.getMapAsync(this);
+
+        placesBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                View view = mapFragment.getView();
+
+                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            view.getMeasuredHeight() - 156);
+                    view.setLayoutParams(layoutParams);
+                    view.invalidate();
+                    view.requestLayout();
+                }else if(newState == BottomSheetBehavior.STATE_HIDDEN){
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
+                    view.setLayoutParams(layoutParams);
+                    view.invalidate();
+                    view.requestLayout();
+                }
+
+                Log.d(TAG, "Map Resized");
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
 
@@ -157,7 +191,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     public void onClick(View v) {
                         autocompleteFragment.setText("");
                         if(mMap != null){
-                            clearMap();
+                            mMap.clear();
                             Log.d(TAG, "Map Cleared, Place Cleared.");
                         }
                         if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
@@ -167,7 +201,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     }
                 });
 
-        bDirections.setOnClickListener(new View.OnClickListener() {
+        directions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -177,6 +211,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     Log.d(TAG, directionsUrl);
                     directionsViewModel = ViewModelProviders.of(TripMaps.this).get(GoogleDirections.class);
                     directionsViewModel.fetchDirections(directionsUrl);
+                    viewStub.setVisibility(View.GONE);
                     hasPlaceChanged = false;
                 }else{
                     updateMap(mapState);
@@ -245,14 +280,19 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         switch(cameraSetting){
 
             case PLACE:
-                setBottomSheetVisibility(true);
+                if(inflatedStub == null){
+                    inflatedStub = viewStub.inflate();
+                }
                 if(place.getAddress() != null){
                     options.title(place.getAddress().toString());
-                    tvPlace.setText(place.getAddress().toString());
+                    tvPlaceTitle.setText(place.getAddress().toString());
                 }else{
                     options.title(place.getName().toString());
-                    tvPlace.setText(place.getName().toString());
+                    tvPlaceTitle.setText(place.getName().toString());
                 }
+                mMap.clear();
+                setBottomSheetVisibility(false);
+                inflatedStub.setVisibility(View.VISIBLE);
                 options.position(place.getLatLng());
                 mMap.addMarker(options);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM));
@@ -301,26 +341,9 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             placesBottomSheetBehavior.setHideable(false);
             autocompleteClearButton.setVisibility(View.VISIBLE);
-            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, fragmentHeight - 156);
         }else{
             placesBottomSheetBehavior.setHideable(true);
             placesBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            resizeMap(mapFragment, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        }
-    }
-
-    private void resizeMap(Fragment fragment, int width, int height){
-        if(fragment != null){
-            View view = fragment.getView();
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-            if(view != null){
-                view.setLayoutParams(layoutParams);
-                view.invalidate();
-                view.requestLayout();
-                Log.d(TAG, "Map resized");
-            }else{
-                Log.d(TAG, "View is null");
-            }
         }
     }
 
@@ -329,6 +352,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         tvPlace.setVisibility(View.INVISIBLE);
         bDirections.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+        setBottomSheetVisibility(true);
     }
 
     @Override
@@ -361,18 +385,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    private void clearMap(){
-        mMap.clear();
-        this.options = null;
-        this.routeOverview = null;
-        this.routeBounds = null;
-    }
-
-    @Override
     public void onErrorPostExecute(String status, String errorMessage) {
         assert getView() != null;
 
@@ -389,18 +401,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             default:
                 Snackbar.make(getView(), "We're sorry. Something went wrong. Please select another location.", Snackbar.LENGTH_LONG).show();
                 break;
-        }
-    }
-
-    /**
-     * Callback method to be invoked when the global layout state or the visibility of views
-     * within the view tree changes
-     */
-    @Override
-    public void onGlobalLayout() {
-        if(getView() != null){
-            fragmentHeight = getView().getMeasuredHeight();
-            Log.d(TAG, "Measure Height: " + fragmentHeight);
         }
     }
 }
