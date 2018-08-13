@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import jordan_jefferson.com.gasbudgeter.R;
@@ -52,6 +53,7 @@ public class AboutFragment extends Fragment {
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
+        ImageButton bottomSheetButton = view.findViewById(R.id.bottom_sheet_button);
         title = view.findViewById(R.id.title);
         description = view.findViewById(R.id.description);
 
@@ -66,6 +68,13 @@ public class AboutFragment extends Fragment {
         onButtonClick(bLicense);
         onButtonClick(bEpaNotices);
         onButtonClick(bPrivacy);
+
+        bottomSheetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
 
         return view;
     }
