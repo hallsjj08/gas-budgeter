@@ -52,7 +52,7 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
                     .commit();
         }
 
-        toolbar.setTitle(dataType);
+        toolbar.setTitle("New Car");
         setSupportActionBar(toolbar);
 
     }
