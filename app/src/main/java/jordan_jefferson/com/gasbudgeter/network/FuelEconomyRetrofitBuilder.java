@@ -1,5 +1,7 @@
 package jordan_jefferson.com.gasbudgeter.network;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 public class FuelEconomyRetrofitBuilder {
 
     private static final String FUEL_ECONOMY_BASE_URL = "https://www.fueleconomy.gov/ws/rest/";
+    private static final String TAG = "Fuel Retrofit Builder";
     private String year;
     private String make;
     private String model;
@@ -94,9 +97,14 @@ public class FuelEconomyRetrofitBuilder {
         this.model = params.get(2);
     }
 
-    public void cancelTransactions(){
+    public void cancelDataTransaction(){
         data.cancel();
+        Log.d(TAG, "Data transaction cancelled.");
+    }
+
+    public void cancelCarTransaction(){
         car.cancel();
+        Log.d(TAG, "Car transaction cancelled.");
     }
 
 }

@@ -22,6 +22,7 @@ public class FuelEconomyRepository {
         void onPreExecute();
         void onPostDataExecute(List<ClientItem> newClientItems);
         void onPostCarExecute(Car newCar);
+        void onPostErrorExecute();
     }
 
     public static AsyncResponseCallbacks callbacks = null;
@@ -91,6 +92,8 @@ public class FuelEconomyRepository {
                 callbacks.onPostDataExecute(clientItems);
             }else{
                 Log.d(TAG, "Execution Failed");
+                fuelEconomyRetrofitBuilder.cancelDataTransaction();
+                callbacks.onPostErrorExecute();
             }
         }
 
@@ -98,7 +101,7 @@ public class FuelEconomyRepository {
         protected void onCancelled() {
             super.onCancelled();
             Log.d(TAG, "Canceled Transactions");
-            fuelEconomyRetrofitBuilder.cancelTransactions();
+            fuelEconomyRetrofitBuilder.cancelDataTransaction();
         }
     }
 
@@ -131,13 +134,15 @@ public class FuelEconomyRepository {
                 callbacks.onPostCarExecute(newCar);
             }else{
                 Log.d(TAG, "Failed Retrieving Car");
+                fuelEconomyRetrofitBuilder.cancelCarTransaction();
+                callbacks.onPostErrorExecute();
             }
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            fuelEconomyRetrofitBuilder.cancelTransactions();
+            fuelEconomyRetrofitBuilder.cancelCarTransaction();
         }
     }
 }

@@ -22,7 +22,7 @@ import jordan_jefferson.com.gasbudgeter.data.FuelEconomyRepository;
 import jordan_jefferson.com.gasbudgeter.network.ClientItem;
 import jordan_jefferson.com.gasbudgeter.view_model.FuelEconomyApi;
 
-public class EditCarFragment extends Fragment implements FuelEconomyRepository.AsyncResponseCallbacks {
+public class EditCarFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String TAG = "EDIT_CAR_FRAG";
@@ -58,7 +58,6 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
             params.add(car.getModel());
             params.add(car.getVehicleType());
         }
-        FuelEconomyRepository.callbacks = this;
     }
 
     @Override
@@ -86,11 +85,6 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
 
         removeVehicle.setPaintFlags(removeVehicle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-//        setClickListener(buttonYear, 0);
-//        setClickListener(buttonMake, 1);
-//        setClickListener(buttonModel, 2);
-//        setClickListener(buttonType, 3);
-
         removeVehicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,57 +98,5 @@ public class EditCarFragment extends Fragment implements FuelEconomyRepository.A
         viewModel = ViewModelProviders.of(this).get(FuelEconomyApi.class);
 
         return view;
-    }
-
-    private void setClickListener(Button button, final int paramType){
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Parameter Type: " + paramType + " clicked.");
-                viewModel.setDataType(params, paramType);
-                if(paramType > 0){
-                    viewModel.fetchNewApiData(params.get(paramType - 1));
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onPreExecute() {
-        assert getActivity() != null;
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.edit_car_fragment_container, progressFragment)
-                .commit();
-    }
-
-    @Override
-    public void onPostDataExecute(List<ClientItem> newClientItems) {
-        assert getActivity() != null;
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .remove(progressFragment)
-                .commit();
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.edit_car_fragment_container, DataItemFragment.newInstance("Edit Car",
-                        newClientItems))
-                .addToBackStack(null)
-                .commit();
-    }
-
-    @Override
-    public void onPostCarExecute(Car newCar) {
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "Started");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "Resumed");
     }
 }

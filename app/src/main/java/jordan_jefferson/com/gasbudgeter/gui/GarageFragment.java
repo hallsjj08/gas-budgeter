@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -139,6 +140,9 @@ public class GarageFragment extends Fragment implements OnClickCarData {
                     Car car = (Car) data.getSerializableExtra(NewCarActivity.NEW_CAR_KEY);
                     Log.d(TAG, car.getMake());
                     viewModel.insert(car);
+                }else if(resultCode == NewCarActivity.RESULT_ERROR){
+                    assert getView() != null;
+                    Snackbar.make(getView(), "We're sorry. Something went wrong. Please try again.", Snackbar.LENGTH_LONG).show();
                 }
                 break;
             case 9002:

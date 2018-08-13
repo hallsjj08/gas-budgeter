@@ -24,6 +24,7 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
     private String dataType = "YEARS";
     private static final String DATA_TYPE_TAG = "Data Type";
     public static final String NEW_CAR_KEY = "New Car";
+    public static final int RESULT_ERROR = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,12 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
         Intent intent = new Intent();
         intent.putExtra(NEW_CAR_KEY, newCar);
         setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void onPostErrorExecute() {
+        setResult(RESULT_ERROR);
         finish();
     }
 
