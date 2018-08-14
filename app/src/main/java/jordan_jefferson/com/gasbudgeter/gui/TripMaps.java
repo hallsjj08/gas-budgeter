@@ -1,12 +1,20 @@
 package jordan_jefferson.com.gasbudgeter.gui;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -14,6 +22,8 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +67,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         GoogleDirectionsRepository.DirectionsAsyncResponseCallbacks {
 
     private static final float DEFAULT_ZOOM = 15f;
+    private int locationRequestCount = 0;
+
+    private String[] myPermissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_NETWORK_STATE};
 
     //private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Decatur,IL&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
     private static final String TAG = "TripMapsFragment";
@@ -81,13 +95,17 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private GoogleDirections directionsViewModel;
     private ViewStub viewStub;
     private View inflatedStub;
+    private FloatingActionButton myLocationFab;
 
     private BottomSheetBehavior placesBottomSheetBehavior;
     private TextView tvPlace;
     private TextView tvPlaceTitle;
     private Button bDirections;
+    private Button directions;
     private ProgressBar progressBar;
     private ImageButton autocompleteClearButton;
+    private TextView retrieveLocText;
+    private ProgressBar pbRetrieveLocation;
 
     private Place place;
     private boolean hasPlaceChanged;
@@ -128,10 +146,12 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         inflatedStub = viewStub.inflate();
         viewStub.setVisibility(View.GONE);
 
-        Button directions = view.findViewById(R.id.place_directions);
-
+        directions = view.findViewById(R.id.place_directions);
+        retrieveLocText = view.findViewById(R.id.retrieve_location_text);
+        pbRetrieveLocation = view.findViewById(R.id.pb_retrieving_location);
         tvPlace = view.findViewById(R.id.place_name);
         tvPlaceTitle = view.findViewById(R.id.place_title);
+
         bDirections = view.findViewById(R.id.start);
         progressBar = view.findViewById(R.id.pbDirectionsLoading);
 
@@ -169,7 +189,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             }
         });
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
         autocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager()
                 .findFragmentById(R.id.trip_place_autocomplete_fragment);
@@ -197,26 +217,69 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             @Override
             public void onClick(View v) {
 
-                if(hasPlaceChanged){
-                    origin = "origin=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
-                    directionsUrl = FORMAT + origin + "&" + destination + "&" + API_KEY;
-                    Log.d(TAG, directionsUrl);
-                    directionsViewModel = ViewModelProviders.of(TripMaps.this).get(GoogleDirections.class);
-                    directionsViewModel.fetchDirections(directionsUrl);
-                    viewStub.setVisibility(View.GONE);
-                    hasPlaceChanged = false;
+                if(checkLocationPermission() && isLocationEnabled()){
+                    if(hasPlaceChanged){
+                        origin = "origin=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
+                        directionsUrl = FORMAT + origin + "&" + destination + "&" + API_KEY;
+                        Log.d(TAG, directionsUrl);
+                        directionsViewModel = ViewModelProviders.of(TripMaps.this).get(GoogleDirections.class);
+                        directionsViewModel.fetchDirections(directionsUrl);
+                        viewStub.setVisibility(View.GONE);
+                        hasPlaceChanged = false;
+                    }else{
+                        updateMap(mapState);
+                    }
                 }else{
-                    updateMap(mapState);
+                    if(!checkLocationPermission()){
+                        AlertDialog.Builder alb = new AlertDialog.Builder(getContext());
+                        alb.setTitle("Permissions Needed")
+                                .setMessage("This feature requires your location to display the route overview " +
+                                        "and directions. Would you like to change location permissions for this app?")
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Log.d(TAG, "User denied Permission");
+                                    }
+                                }).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestPermissions(myPermissions, 2);
+                            }
+                        })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .create().show();
+                    }else if(!isLocationEnabled()){
+                        AlertDialog.Builder alb = new AlertDialog.Builder(getContext());
+                        alb.setTitle("Location Settings")
+                                .setMessage("Location settings is currently disabled and is needed " +
+                                        "for this feature. Would you like to change location settings " +
+                                        "for this app?")
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Log.d(TAG, "User denied Permission");
+                                    }
+                                }).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                getContext().startActivity(myIntent);
+                            }
+                        })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .create().show();
+                    }
+
                 }
 
             }
         });
 
-        FloatingActionButton myLocationFab = view.findViewById(R.id.my_location_fab);
+        myLocationFab = view.findViewById(R.id.my_location_fab);
         myLocationFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDeviceLocation();
+                getDeviceLocation(true);
             }
         });
 
@@ -230,37 +293,108 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         Log.d(TAG, "Activity Created");
     }
 
-    @SuppressLint("MissingPermission")
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "Started.");
+        lastKnownLocation = null;
+        locationRequestCount = 0;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "Resumed");
+        if(checkLocationPermission() && isLocationEnabled() && mMap != null){
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            getDeviceLocation(false);
+            gettingLocationStub(true);
+        }
+    }
+
+    private void gettingLocationStub(boolean showStub){
+        if(showStub){
+            tvPlaceTitle.setVisibility(View.INVISIBLE);
+            directions.setVisibility(View.INVISIBLE);
+            myLocationFab.setVisibility(View.INVISIBLE);
+            retrieveLocText.setVisibility(View.VISIBLE);
+            pbRetrieveLocation.setVisibility(View.VISIBLE);
+        }else {
+            tvPlaceTitle.setVisibility(View.VISIBLE);
+            directions.setVisibility(View.VISIBLE);
+            myLocationFab.setVisibility(View.VISIBLE);
+            retrieveLocText.setVisibility(View.INVISIBLE);
+            pbRetrieveLocation.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.setIndoorEnabled(false);
 
-        if(mapState != null){
-            updateMap(mapState);
-        }else{
-            getDeviceLocation();
+        if(checkLocationPermission() && isLocationEnabled()){
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            myLocationFab.setVisibility(View.VISIBLE);
+            if(mapState != null){
+                updateMap(mapState);
+            }else{
+                getDeviceLocation(true);
+            }
+        }else {
+            mMap.setMyLocationEnabled(false);
+            myLocationFab.setVisibility(View.INVISIBLE);
+            if(mapState != null){
+                updateMap(mapState);
+            }
         }
 
+        mMap.setIndoorEnabled(false);
 
         Log.d(TAG, "Map Ready");
     }
 
     @SuppressLint("MissingPermission")
-    private void getDeviceLocation(){
+    private void getDeviceLocation(final boolean showUserLocation){
         assert getActivity() != null;
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null){
+                if(location != null && isLocationEnabled()){
                     lastKnownLocation = location;
-                    updateMap(DEVICE_LOCATION);
-                    Log.d(TAG, "Device Found.");
+                    gettingLocationStub(false);
+                    if(showUserLocation){
+                        updateMap(DEVICE_LOCATION);
+                    }
+                    Log.d(TAG, "Device Found. Location requested " + locationRequestCount + " times.");
+                }else if(isLocationEnabled()){
+                    getDeviceLocation(false);
+                    locationRequestCount = locationRequestCount + 1;
                 }
             }
         });
+    }
+
+    private boolean checkLocationPermission(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            for(String permission : myPermissions){
+                if (ContextCompat.checkSelfPermission(getContext(), permission)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    Log.w(permission, "Permission Denied");
+                    return false;
+                } else {
+                    Log.w(permission, "Permission Already Granted");
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isLocationEnabled(){
+        assert getContext() != null;
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     private void updateMap(String cameraSetting) {
@@ -416,5 +550,27 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         }
 
         Log.d(TAG, "Map Resized");
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Permissions Granted");
+                    if(mMap != null){
+                        mMap.setMyLocationEnabled(true);
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        getDeviceLocation(false);
+                        myLocationFab.setVisibility(View.VISIBLE);
+                    }
+                }else{
+                    Log.d(TAG, "Permissions Denied");
+                }
+        }
+
     }
 }

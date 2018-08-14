@@ -57,11 +57,11 @@ public class MainActivity extends AppCompatActivity {
             for(String permission : myPermissions){
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
                         != PackageManager.PERMISSION_GRANTED) {
-                    Log.w(permission, "Requesting Permission");
+                    Log.d(permission, "Requesting Permission");
                     ActivityCompat.requestPermissions(this,
                             myPermissions, 1);
                 } else {
-                    Log.w(permission, "Permission Already Granted");
+                    Log.d(permission, "Permission Already Granted");
                 }
             }
         }
