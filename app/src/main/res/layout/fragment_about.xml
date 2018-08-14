@@ -41,7 +41,7 @@
                 android:id="@+id/about"
                 android:background="@color/secondaryColor"
                 android:layout_margin="4dp"
-                app:layout_constraintHeight_percent=".20"
+                app:layout_constraintHeight_percent=".19"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="ABOUT THE APP"
                 android:textSize="24sp"/>
@@ -52,7 +52,7 @@
                 android:id="@+id/features"
                 android:background="@color/secondaryColor"
                 android:layout_margin="4dp"
-                app:layout_constraintHeight_percent=".20"
+                app:layout_constraintHeight_percent=".19"
                 app:layout_constraintTop_toBottomOf="@id/about"
                 android:text="UPCOMING FEATURES"
                 android:textSize="24sp"/>
@@ -63,7 +63,7 @@
                 android:id="@+id/licenses"
                 android:background="@color/secondaryColor"
                 android:layout_margin="4dp"
-                app:layout_constraintHeight_percent=".20"
+                app:layout_constraintHeight_percent=".19"
                 app:layout_constraintTop_toBottomOf="@id/features"
                 android:text="LICENSES AND AGREEMENTS"
                 android:textSize="24sp"/>
@@ -74,7 +74,7 @@
                 android:id="@+id/notices"
                 android:background="@color/secondaryColor"
                 android:layout_margin="4dp"
-                app:layout_constraintHeight_percent=".20"
+                app:layout_constraintHeight_percent=".19"
                 app:layout_constraintTop_toBottomOf="@id/licenses"
                 android:text="EPA NOTICES"
                 android:textSize="24sp"/>
@@ -85,7 +85,7 @@
                 android:id="@+id/privacy"
                 android:background="@color/secondaryColor"
                 android:layout_margin="4dp"
-                app:layout_constraintHeight_percent=".20"
+                app:layout_constraintHeight_percent=".19"
                 app:layout_constraintTop_toBottomOf="@id/notices"
                 android:text="PRIVACY"
                 android:textSize="24sp"/>
