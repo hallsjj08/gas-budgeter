@@ -541,6 +541,9 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             case "ZERO_RESULTS":
                 Snackbar.make(getView(), "We're sorry, no directions were found. Please select another location.", Snackbar.LENGTH_LONG).show();
                 break;
+            case "CONNECTION_ERROR":
+                Snackbar.make(getView(), errorMessage, Snackbar.LENGTH_LONG).show();
+                break;
             default:
                 Snackbar.make(getView(), "We're sorry. Something went wrong. Please select another location.", Snackbar.LENGTH_LONG).show();
                 break;

@@ -16,6 +16,7 @@ public class GoogleDirectionsRetrofitBuilder{
     private static final String TAG = "DIRECTION_RESULTS";
     private GoogleDirectionsClient googleDirectionsClient;
     private DirectionResults directionResults;
+    private Call<DirectionResults> data;
 
     public GoogleDirectionsRetrofitBuilder(){
         Retrofit retrofit = new Retrofit.Builder()
@@ -27,7 +28,7 @@ public class GoogleDirectionsRetrofitBuilder{
     }
 
     public DirectionResults fetchDirectionResults(String directionsPath){
-        Call<DirectionResults> data = googleDirectionsClient.fetchDirectionResults(directionsPath);
+        data = googleDirectionsClient.fetchDirectionResults(directionsPath);
 
         try {
             directionResults = data.execute().body();
@@ -37,5 +38,9 @@ public class GoogleDirectionsRetrofitBuilder{
             Log.e(TAG, "Something went wrong.");
         }
         return directionResults;
+    }
+
+    public void cancelDirectionsFetch(){
+        data.cancel();
     }
 }

@@ -85,12 +85,18 @@ public class GoogleDirectionsRepository {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if(status.equals("OK")){
-                callbacks.onSuccessPostExecute(bounds, polyOverview,
-                        miles, travelTime, meters);
+            if (directionResults != null) {
+                if(status.equals("OK")){
+                    callbacks.onSuccessPostExecute(bounds, polyOverview,
+                            miles, travelTime, meters);
+                }else{
+                    callbacks.onErrorPostExecute(status, errorMessage);
+                }
             }else{
-                callbacks.onErrorPostExecute(status, errorMessage);
+                callbacks.onErrorPostExecute("CONNECTION_ERROR", "Could not connect to servers. Please try again later.");
+                googleDirectionsRetrofitBuilder.cancelDirectionsFetch();
             }
+
         }
     }
 
