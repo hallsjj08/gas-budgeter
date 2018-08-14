@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         tripMapsFragment = TripMaps.newInstance();
                         getSupportFragmentManager().beginTransaction()
                                 .add(mapContainer, tripMapsFragment, MAP_FRAG_TAG)
+                                .hide(currentFragment)
                                 .commit();
                         currentFragment = tripMapsFragment;
                     }else{
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         garageFragment = GarageFragment.newInstance();
                         getSupportFragmentManager().beginTransaction()
                                 .add(garageContainer, garageFragment, GARAGE_FRAG_TAG)
+                                .hide(currentFragment)
                                 .commit();
                         currentFragment = garageFragment;
                     }else{
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         aboutFragment = AboutFragment.newInstance();
                         getSupportFragmentManager().beginTransaction()
                                 .add(aboutContainer, aboutFragment, ABOUT_FRAG_TAG)
+                                .hide(currentFragment)
                                 .commit();
                         currentFragment = aboutFragment;
                     }else{
@@ -125,10 +128,13 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
         tripMapsFragment = TripMaps.newInstance();
         garageFragment = GarageFragment.newInstance();
+        aboutFragment = AboutFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .add(garageContainer, garageFragment, GARAGE_FRAG_TAG)
+                .add(aboutContainer, aboutFragment, ABOUT_FRAG_TAG)
                 .add(mapContainer, tripMapsFragment, MAP_FRAG_TAG)
                 .hide(garageFragment)
+                .hide(aboutFragment)
                 .commit();
         currentFragment = tripMapsFragment;
     }
