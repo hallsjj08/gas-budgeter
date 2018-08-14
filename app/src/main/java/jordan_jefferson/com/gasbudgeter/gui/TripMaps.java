@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -100,7 +101,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private BottomSheetBehavior placesBottomSheetBehavior;
     private TextView tvPlace;
     private TextView tvPlaceTitle;
-    private Button bDirections;
+    private Button bStart;
     private Button directions;
     private ProgressBar progressBar;
     private ImageButton autocompleteClearButton;
@@ -152,7 +153,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         tvPlace = view.findViewById(R.id.place_name);
         tvPlaceTitle = view.findViewById(R.id.place_title);
 
-        bDirections = view.findViewById(R.id.start);
+        bStart = view.findViewById(R.id.start);
         progressBar = view.findViewById(R.id.pbDirectionsLoading);
 
         recyclerView = view.findViewById(R.id.bottom_sheet_recyclerView);
@@ -270,6 +271,22 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                                 .create().show();
                     }
 
+                }
+
+            }
+        });
+
+        bStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + place.getLatLng().latitude + ","
+                                            + place.getLatLng().longitude + "&mode=d");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if(mapIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                    startActivity(mapIntent);
+                }else {
+                    Snackbar.make(getView(), "Please install Google Maps to start navigation.", Snackbar.LENGTH_LONG).show();
                 }
 
             }
@@ -476,7 +493,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     @Override
     public void onPreExecute() {
         tvPlace.setVisibility(View.INVISIBLE);
-        bDirections.setVisibility(View.INVISIBLE);
+        bStart.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         setBottomSheetVisibility(true);
     }
@@ -505,7 +522,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         });
 
         tvPlace.setVisibility(View.VISIBLE);
-        bDirections.setVisibility(View.VISIBLE);
+        bStart.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
 
     }
@@ -517,7 +534,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         setBottomSheetVisibility(false);
 
         tvPlace.setVisibility(View.VISIBLE);
-        bDirections.setVisibility(View.VISIBLE);
+        bStart.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
 
         switch (status){
