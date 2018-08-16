@@ -1,7 +1,5 @@
 package jordan_jefferson.com.gasbudgeter.network;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,12 +97,12 @@ public class FuelEconomyRetrofitBuilder {
 
     public void cancelDataTransaction(){
         data.cancel();
-        Log.d(TAG, "Data transaction cancelled.");
+//        Log.d(TAG, "Data transaction cancelled.");
     }
 
     public void cancelCarTransaction(){
         car.cancel();
-        Log.d(TAG, "Car transaction cancelled.");
+//        Log.d(TAG, "Car transaction cancelled.");
     }
 
 }

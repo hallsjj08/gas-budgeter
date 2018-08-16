@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +72,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewH
                     ", Highway MPG: " + cars.get(position).getHwy_mpg();
 
             if(cars.get(position).getCarPicPath() != null){
-                Log.d(TAG, "User has picture of car.");
+//                Log.d(TAG, "User has picture of car.");
             }
 
             holder.carText.setText(userCarDescription);

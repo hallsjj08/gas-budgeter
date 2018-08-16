@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +13,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
-import jordan_jefferson.com.gasbudgeter.data.FuelEconomyRepository;
-import jordan_jefferson.com.gasbudgeter.network.ClientItem;
 import jordan_jefferson.com.gasbudgeter.view_model.FuelEconomyApi;
 
 public class EditCarFragment extends Fragment {

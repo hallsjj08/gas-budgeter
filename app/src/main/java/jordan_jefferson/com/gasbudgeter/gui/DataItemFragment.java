@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
         args.putSerializable(ARG_PARAM1, (Serializable) clientItems);
         args.putString(ARG_PARAM2, fragmentTag);
         fragment.setArguments(args);
-        Log.d(TAG, "New Instance");
+//        Log.d(TAG, "New Instance");
         return fragment;
     }
 
@@ -93,7 +92,7 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
         assert getActivity() != null;
         switch (fragmentTag){
             case "New Car":
-                Log.d("STACK_COUNT", "" + getActivity().getSupportFragmentManager().getBackStackEntryCount());
+//                Log.d("STACK_COUNT", "" + getActivity().getSupportFragmentManager().getBackStackEntryCount());
                 if(getActivity().getSupportFragmentManager().getBackStackEntryCount() == 4){
                     String vehicleType = clientItems.get(position).getText();
                     String vehicleId = clientItems.get(position).getValue();
@@ -105,7 +104,7 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
                 break;
             case "Edit Car":
                 getActivity().getSupportFragmentManager().popBackStack();
-                Log.d(TAG, "Stack Popped");
+//                Log.d(TAG, "Stack Popped");
                 break;
         }
 

@@ -1,7 +1,6 @@
 package jordan_jefferson.com.gasbudgeter.data;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +90,7 @@ public class FuelEconomyRepository {
             if(aBoolean && clientItems != null){
                 callbacks.onPostDataExecute(clientItems);
             }else{
-                Log.d(TAG, "Execution Failed");
+//                Log.d(TAG, "Execution Failed");
                 fuelEconomyRetrofitBuilder.cancelDataTransaction();
                 callbacks.onPostErrorExecute();
             }
@@ -100,7 +99,7 @@ public class FuelEconomyRepository {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            Log.d(TAG, "Canceled Transactions");
+//            Log.d(TAG, "Canceled Transactions");
             fuelEconomyRetrofitBuilder.cancelDataTransaction();
         }
     }
@@ -133,7 +132,7 @@ public class FuelEconomyRepository {
                 newCar.setVehicleType(sVehicleType);
                 callbacks.onPostCarExecute(newCar);
             }else{
-                Log.d(TAG, "Failed Retrieving Car");
+//                Log.d(TAG, "Failed Retrieving Car");
                 fuelEconomyRetrofitBuilder.cancelCarTransaction();
                 callbacks.onPostErrorExecute();
             }

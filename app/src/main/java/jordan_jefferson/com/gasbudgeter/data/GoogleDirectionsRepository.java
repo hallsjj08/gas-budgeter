@@ -1,7 +1,6 @@
 package jordan_jefferson.com.gasbudgeter.data;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -62,7 +61,7 @@ public class GoogleDirectionsRepository {
         protected Void doInBackground(String... strings) {
             this.directionResults = googleDirectionsRetrofitBuilder.fetchDirectionResults(strings[0]);
             if(directionResults != null){
-                Log.d("STATUS", directionResults.getStatus());
+//                Log.d("STATUS", directionResults.getStatus());
                 if(directionResults.getStatus().equals("OK")){
                     status = directionResults.getStatus();
                     polylineOverview = directionResults.getRoutes().get(0).getRoutePolyline().decodePolyPoints();
@@ -75,7 +74,7 @@ public class GoogleDirectionsRepository {
                 }else{
                     status = directionResults.getStatus();
                     errorMessage = directionResults.getErrorMessage();
-                    Log.e("RESULTS", status + ", " + errorMessage);
+//                    Log.e("RESULTS", status + ", " + errorMessage);
                 }
             }
             return null;

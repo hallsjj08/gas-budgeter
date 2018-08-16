@@ -27,7 +27,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +56,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
-import jordan_jefferson.com.gasbudgeter.BuildConfig;
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
 import jordan_jefferson.com.gasbudgeter.data.GoogleDirectionsRepository;
@@ -124,7 +122,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         TripMaps fragment = new TripMaps();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        Log.d(TAG, "New Instance.");
+//        Log.d(TAG, "New Instance.");
         return new TripMaps();
     }
 
@@ -132,9 +130,9 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            Log.d(TAG, "Has saved state.");
+//            Log.d(TAG, "Has saved state.");
         }
-        Log.d(TAG, "Created");
+//        Log.d(TAG, "Created");
     }
 
     @Override
@@ -190,7 +188,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     animation.start();
                 }
 
-                Log.d(TAG, "Map Resized");
+//                Log.d(TAG, "Map Resized");
             }
 
             @Override
@@ -214,7 +212,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                         autocompleteFragment.setText("");
                         if(mMap != null){
                             mMap.clear();
-                            Log.d(TAG, "Map Cleared, Place Cleared.");
+//                            Log.d(TAG, "Map Cleared, Place Cleared.");
                         }
                         if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
                                 || placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
@@ -231,7 +229,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     if(hasPlaceChanged){
                         origin = "origin=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
                         directionsUrl = FORMAT + origin + "&" + destination + "&" + API_KEY;
-                        Log.d(TAG, directionsUrl);
+//                        Log.d(TAG, directionsUrl);
                         directionsViewModel = ViewModelProviders.of(TripMaps.this).get(GoogleDirections.class);
                         directionsViewModel.fetchDirections(directionsUrl);
                         viewStub.setVisibility(View.GONE);
@@ -248,7 +246,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                                 .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Log.d(TAG, "User denied Permission");
+//                                        Log.d(TAG, "User denied Permission");
                                     }
                                 }).setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
@@ -267,7 +265,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                                 .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Log.d(TAG, "User denied Permission");
+//                                        Log.d(TAG, "User denied Permission");
                                     }
                                 }).setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
@@ -308,20 +306,20 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             }
         });
 
-        Log.d(TAG, "View Created");
+//        Log.d(TAG, "View Created");
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "Activity Created");
+//        Log.d(TAG, "Activity Created");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "Started.");
+//        Log.d(TAG, "Started.");
         lastKnownLocation = null;
         locationRequestCount = 0;
     }
@@ -329,7 +327,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "Resumed");
+//        Log.d(TAG, "Resumed");
         if(checkLocationPermission() && isLocationEnabled() && mMap != null){
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -377,7 +375,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
 
         mMap.setIndoorEnabled(false);
 
-        Log.d(TAG, "Map Ready");
+//        Log.d(TAG, "Map Ready");
     }
 
     @SuppressLint("MissingPermission")
@@ -392,7 +390,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                     if(showUserLocation){
                         updateMap(DEVICE_LOCATION);
                     }
-                    Log.d(TAG, "Device Found. Location requested " + locationRequestCount + " times.");
+//                    Log.d(TAG, "Device Found. Location requested " + locationRequestCount + " times.");
                 }else if(isLocationEnabled()){
                     getDeviceLocation(false);
                     locationRequestCount = locationRequestCount + 1;
@@ -406,10 +404,10 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             for(String permission : myPermissions){
                 if (ContextCompat.checkSelfPermission(getContext(), permission)
                         != PackageManager.PERMISSION_GRANTED) {
-                    Log.w(permission, "Permission Denied");
+//                    Log.w(permission, "Permission Denied");
                     return false;
                 } else {
-                    Log.w(permission, "Permission Already Granted");
+//                    Log.w(permission, "Permission Already Granted");
                 }
             }
         }
@@ -472,7 +470,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         updateMap(mapState);
 
         if(place.getId() != null){
-            Log.d(TAG, place.getId());
+//            Log.d(TAG, place.getId());
             destination = "destination=place_id:" + place.getId();
         }else{
             destination = "destination=" + place.getLatLng().latitude + "," + place.getLatLng().longitude;
@@ -484,7 +482,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     @Override
     public void onError(Status status) {
         Toast.makeText(getActivity(), "Unfortunately there was an error locating your place.", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, status.getStatusMessage());
+//        Log.d(TAG, status.getStatusMessage());
     }
 
     public void setBottomSheetVisibility(boolean isVisible){
@@ -568,7 +566,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.d(TAG, "Config Change");
+//        Log.d(TAG, "Config Change");
     }
 
     @SuppressLint("MissingPermission")
@@ -579,7 +577,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         switch (requestCode) {
             case 2:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Permissions Granted");
+//                    Log.d(TAG, "Permissions Granted");
                     if(mMap != null){
                         mMap.setMyLocationEnabled(true);
                         mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -587,7 +585,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                         myLocationFab.setVisibility(View.VISIBLE);
                     }
                 }else{
-                    Log.d(TAG, "Permissions Denied");
+//                    Log.d(TAG, "Permissions Denied");
                 }
         }
 

@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class GarageFragment extends Fragment implements OnClickCarData {
 
     public GarageFragment() {
         // Required empty public constructor
-        Log.d(TAG, "Constructed");
+//        Log.d(TAG, "Constructed");
     }
 
     public static GarageFragment newInstance() {
@@ -60,9 +59,9 @@ public class GarageFragment extends Fragment implements OnClickCarData {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-           Log.d(TAG, "Has Saved State");
+//           Log.d(TAG, "Has Saved State");
         }
-        Log.d(TAG, "Created");
+//        Log.d(TAG, "Created");
     }
 
     @Override
@@ -77,7 +76,7 @@ public class GarageFragment extends Fragment implements OnClickCarData {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Add Car Button Clicked.");
+//                Log.d(TAG, "Add Car Button Clicked.");
                 Intent intent = new Intent(getActivity(), NewCarActivity.class);
                 startActivityForResult(intent, 9001);
             }
@@ -94,7 +93,7 @@ public class GarageFragment extends Fragment implements OnClickCarData {
             public void onChanged(@Nullable List<Car> cars) {
                 assert cars != null;
                 if(cars.isEmpty()){
-                    Log.d(TAG, "Garage is empty.");
+//                    Log.d(TAG, "Garage is empty.");
                     if(inflatedNewCarStub == null){
                         inflatedNewCarStub = newCarStub.inflate();
                     }
@@ -110,7 +109,7 @@ public class GarageFragment extends Fragment implements OnClickCarData {
             }
         });
 
-        Log.d(TAG, "View Created");
+//        Log.d(TAG, "View Created");
 
         recyclerView.setAdapter(carListAdapter);
 
@@ -119,7 +118,7 @@ public class GarageFragment extends Fragment implements OnClickCarData {
 
     @Override
     public void onClickEditCar(Car car) {
-        Log.d(TAG, "Edit Car Button Clicked.");
+//        Log.d(TAG, "Edit Car Button Clicked.");
         Intent intent = new Intent(getActivity(), EditCarActivity.class);
         ArrayList<String> carParams = new ArrayList<>();
         carParams.add(car.getYear() + "");
@@ -138,7 +137,7 @@ public class GarageFragment extends Fragment implements OnClickCarData {
             case 9001:
                 if(resultCode == Activity.RESULT_OK){
                     Car car = (Car) data.getSerializableExtra(NewCarActivity.NEW_CAR_KEY);
-                    Log.d(TAG, car.getMake());
+//                    Log.d(TAG, car.getMake());
                     viewModel.insert(car);
                 }else if(resultCode == NewCarActivity.RESULT_ERROR){
                     assert getView() != null;
@@ -157,6 +156,6 @@ public class GarageFragment extends Fragment implements OnClickCarData {
 
     @Override
     public void onClickViewCarSpecs(Car car) {
-        Log.d(TAG, "View Specs Button Clicked");
+//        Log.d(TAG, "View Specs Button Clicked");
     }
 }

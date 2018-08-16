@@ -1,7 +1,5 @@
 package jordan_jefferson.com.gasbudgeter.network;
 
-import android.util.Log;
-
 import java.io.IOException;
 
 import jordan_jefferson.com.gasbudgeter.directions_model.DirectionResults;
@@ -32,10 +30,10 @@ public class GoogleDirectionsRetrofitBuilder{
 
         try {
             directionResults = data.execute().body();
-            Log.d(TAG, "Executed Successfully");
+//            Log.d(TAG, "Executed Successfully");
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e(TAG, "Something went wrong.");
+//            Log.e(TAG, "Something went wrong.");
         }
         return directionResults;
     }

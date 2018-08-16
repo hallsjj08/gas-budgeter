@@ -3,7 +3,6 @@ package jordan_jefferson.com.gasbudgeter.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -83,7 +82,7 @@ public class Car implements Serializable {
     public int costOfGas(double priceOfGas, long totalDistance_meters){
         double metersToMilesConversion = 1609.344;
         double miles = ((double) totalDistance_meters/metersToMilesConversion);
-        Log.d("GAS COST", miles + "");
+//        Log.d("GAS COST", miles + "");
         double gallonsUsed = miles/((double) hwy_mpg);
         double costOfGas = gallonsUsed * priceOfGas;
         int approximateCostOfGas = (int) costOfGas;

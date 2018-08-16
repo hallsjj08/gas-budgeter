@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import jordan_jefferson.com.gasbudgeter.R;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        Log.d(TAG, "Activity Created");
+//        Log.d(TAG, "Activity Created");
 
         mapContainer = R.id.map_container;
         garageContainer = R.id.garage_container;
@@ -57,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
             for(String permission : myPermissions){
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
                         != PackageManager.PERMISSION_GRANTED) {
-                    Log.d(permission, "Requesting Permission");
+//                    Log.d(permission, "Requesting Permission");
                     ActivityCompat.requestPermissions(this,
                             myPermissions, 1);
                 } else {
-                    Log.d(permission, "Permission Already Granted");
+//                    Log.d(permission, "Permission Already Granted");
                 }
             }
         }
@@ -158,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            Log.d(TAG, "Landscape");
+//            Log.d(TAG, "Landscape");
         }else {
-            Log.d(TAG, "Portrait");
+//            Log.d(TAG, "Portrait");
         }
     }
 
@@ -171,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Permissions Granted");
+//                    Log.d(TAG, "Permissions Granted");
                 }else{
-                    Log.d(TAG, "Permissions Denied");
+//                    Log.d(TAG, "Permissions Denied");
                 }
         }
     }
