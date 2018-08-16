@@ -50,9 +50,9 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.
     @Override
     public void onBindViewHolder(@NonNull BottomSheetViewHolder holder, int position) {
         if(cars != null){
-            String year_make = cars.get(position).getYear() + cars.get(position).getMake();
+            String year_make = cars.get(position).getYear() + " " + cars.get(position).getMake();
             String model = cars.get(position).getModel();
-            String fuelCost = "Fuel Cost: $" + cars.get(position).costOfGas(2.94, distanceMeters);
+            String fuelCost = "Fuel Cost: $" + cars.get(position).costOfGas(2.84, distanceMeters);
 
             holder.tvYearMake.setText(year_make);
             holder.tvBottomSheetCarModel.setText(model);
