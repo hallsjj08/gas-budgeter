@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             tripMapsFragment = getSupportFragmentManager().findFragmentByTag(MAP_FRAG_TAG);
             garageFragment = getSupportFragmentManager().findFragmentByTag(GARAGE_FRAG_TAG);
             aboutFragment = getSupportFragmentManager().findFragmentByTag(ABOUT_FRAG_TAG);
+            currentFragment = aboutFragment;
             navigation.setSelectedItemId(currentSelection);
         }
     }

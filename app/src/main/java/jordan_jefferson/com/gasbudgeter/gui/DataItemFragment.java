@@ -48,11 +48,11 @@ public class DataItemFragment extends Fragment implements RecyclerViewItemClickL
         return fragment;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //noinspection unchecked
             this.clientItems = (List<ClientItem>) getArguments().getSerializable(ARG_PARAM1);
             this.fragmentTag = getArguments().getString(ARG_PARAM2);
         }

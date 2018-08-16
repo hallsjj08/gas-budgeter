@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -33,6 +34,7 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         FuelEconomyRepository.callbacks = this;
+        viewModel = ViewModelProviders.of(this).get(FuelEconomyApi.class);
 
         if(progressFragment == null){
             progressFragment = ProgressFragment.newInstance();
@@ -44,13 +46,7 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
         }
 
         if(dataItemFragment == null){
-            viewModel = ViewModelProviders.of(this).get(FuelEconomyApi.class);
             viewModel.fetchNewApiData("");
-        }else{
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.new_car_items_container, dataItemFragment, dataType)
-                    .addToBackStack(dataType)
-                    .commit();
         }
 
         toolbar.setTitle("New Car");
@@ -83,7 +79,7 @@ public class NewCarActivity extends AppCompatActivity implements FuelEconomyRepo
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,
                         android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                .add(R.id.new_car_items_container, dataItemFragment)
+                .add(R.id.new_car_items_container, dataItemFragment, dataType)
                 .addToBackStack(null)
                 .commit();
     }

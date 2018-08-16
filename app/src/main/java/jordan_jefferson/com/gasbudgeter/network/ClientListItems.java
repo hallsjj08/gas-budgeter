@@ -7,7 +7,7 @@ import java.util.List;
 
 @Root(name = "menuItems", strict = false)
 public class ClientListItems {
-    @ElementList(inline = true)
+    @ElementList(inline = true, required = false)
     public List<ClientItem> clientItemList;
 }
 

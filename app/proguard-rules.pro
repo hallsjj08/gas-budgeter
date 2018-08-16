@@ -19,3 +19,40 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Retain generic type information for use by reflection by converters and adapters.
+-keepattributes Signature
+
+# Retain service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+# Ignore JSR 305 annotations for embedding nullability information.
+-dontwarn javax.annotation.**
+
+-dontwarn org.xmlpull.v1.**
+-keep class org.xmlpull.** { *; }
+
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+-keep class jordan_jefferson.com.gasbudgeter.data.** { *; }
+-keep class jordan_jefferson.com.gasbudgeter.directions_model.** { *; }
+-keep class jordan_jefferson.com.gasbudgeter.network.** { *; }
+-keep class jordan_jefferson.com.gasbudgeter.intface_files.FuelEconomyClient { *; }
+
+-keep public class org.simpleframework.** { *; }
+-keep class org.simpleframework.xml.** { *; }
+-keep class org.simpleframework.xml.core.** { *; }
+-keep class org.simpleframework.xml.util.** { *; }
+
+-keepattributes ElementList, Root
+
+-keepclassmembers class * {
+    @org.simpleframework.xml.* *;
+}

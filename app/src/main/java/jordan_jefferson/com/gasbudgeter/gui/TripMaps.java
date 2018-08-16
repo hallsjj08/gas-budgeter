@@ -2,6 +2,7 @@ package jordan_jefferson.com.gasbudgeter.gui;
 
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -56,6 +57,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
+import jordan_jefferson.com.gasbudgeter.BuildConfig;
 import jordan_jefferson.com.gasbudgeter.R;
 import jordan_jefferson.com.gasbudgeter.data.Car;
 import jordan_jefferson.com.gasbudgeter.data.GoogleDirectionsRepository;
@@ -73,9 +75,8 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     private String[] myPermissions = {Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_NETWORK_STATE};
 
-    //private static final String[] TEST_URL = {"https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Decatur,IL&key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw"};
     private static final String TAG = "TripMapsFragment";
-    private static final String API_KEY = "key=AIzaSyBztmrBqLEv5fO-NjmNXg66ztVK_Si99Qw";
+    private static String API_KEY;
     private static final String FORMAT = "json?";
     private static final String PLACE = "Place Selected";
     private static final String ROUTE_OVERVIEW = "Directions";
@@ -141,6 +142,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                              Bundle savedInstanceState) {
 
         GoogleDirectionsRepository.callbacks = this;
+        API_KEY = "key=" + getResources().getString(R.string.google_maps_key);
 
         View view = inflater.inflate(R.layout.fragment_trip_maps, container, false);
         viewStub = view.findViewById(R.id.place_stub);
@@ -153,6 +155,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
         tvPlace = view.findViewById(R.id.place_name);
         tvPlaceTitle = view.findViewById(R.id.place_title);
 
+        myLocationFab = view.findViewById(R.id.my_location_fab);
         bStart = view.findViewById(R.id.start);
         progressBar = view.findViewById(R.id.pbDirectionsLoading);
 
@@ -177,8 +180,14 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
                 if(newState == BottomSheetBehavior.STATE_EXPANDED){
                     resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT,
                             mapView.getMeasuredHeight() - bottomSheet.getMeasuredHeight());
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(myLocationFab, "translationY", -112f);
+                    animation.setDuration(500);
+                    animation.start();
                 }else if(newState == BottomSheetBehavior.STATE_HIDDEN){
                     resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(myLocationFab, "translationY", 0f);
+                    animation.setDuration(500);
+                    animation.start();
                 }
 
                 Log.d(TAG, "Map Resized");
@@ -292,7 +301,6 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
             }
         });
 
-        myLocationFab = view.findViewById(R.id.my_location_fab);
         myLocationFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -560,16 +568,7 @@ public class TripMaps extends Fragment implements OnMapReadyCallback, PlaceSelec
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        View mapView = mapFragment.getView();
-
-        if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
-            resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT,
-                    mapView.getMeasuredHeight() - 156);
-        }else if(placesBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN){
-            resizeMap(mapView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        }
-
-        Log.d(TAG, "Map Resized");
+        Log.d(TAG, "Config Change");
     }
 
     @SuppressLint("MissingPermission")
