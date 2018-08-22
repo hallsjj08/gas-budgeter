@@ -11,47 +11,53 @@
     android:layout_marginEnd="4dp"
     android:orientation="vertical">
 
-    <ImageButton
-        android:layout_width="196dp"
-        android:layout_height="16dp"
-        android:id="@+id/bottom_sheet_button"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:padding="1dp"
-        android:src="@drawable/rounded_corners" />
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="4dp">
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
             android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="156dp"
+                android:layout_height="8dp"
+                android:id="@+id/bottom_sheet_button"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:padding="1dp"
+                android:src="@drawable/rounded_corners" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:id="@+id/title"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:text="ABOUT TEST"
                 android:layout_gravity="center_horizontal"/>
 
+        </android.support.v7.widget.LinearLayoutCompat>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/description"
-                android:layout_marginTop="16dp"
                 android:text="@string/privacy"
                 android:textSize="18sp"/>
-
-        </android.support.v7.widget.LinearLayoutCompat>
 
     </android.support.v4.widget.NestedScrollView>
 
